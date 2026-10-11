@@ -1,465 +1,542 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Key · Reset HWID</title>
-    <style>
-        /* ---------- RESET & BASE ---------- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KeyAuth · Orange Panel</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter','Segoe UI',system-ui,sans-serif; }
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(145deg, #1a1a1a 0%, #2a1f14 100%);
-            padding: 1.5rem;
-        }
+  body {
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#0d0d0f;
+    background-image:
+      radial-gradient(circle at 20% 20%, #ff8c1a15 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, #ff8c1a10 0%, transparent 40%);
+    padding:20px;
+    color:#e8e8e8;
+  }
 
-        /* ---------- PANEL PRINCIPAL (ORANGE) ---------- */
-        .panel {
-            background: #ff8c1a;  /* orange vif */
-            background: linear-gradient(145deg, #ff9f2e, #f57c00);
-            padding: 2.5rem 2rem 2.2rem;
-            border-radius: 3.5rem 1.5rem 3.5rem 1.5rem;
-            box-shadow: 
-                0 25px 40px -10px rgba(0, 0, 0, 0.7),
-                0 0 0 2px rgba(255, 215, 120, 0.5),
-                inset 0 -5px 15px rgba(0, 0, 0, 0.25),
-                inset 0 5px 15px rgba(255, 255, 200, 0.5);
-            max-width: 580px;
-            width: 100%;
-            transition: all 0.2s;
-            border: 1px solid #ffcc80;
-        }
+  /* ---------- PANEL PRINCIPAL ---------- */
+  .keyauth-panel {
+    width:100%;
+    max-width:480px;
+    background:#16161a;
+    border:1px solid #2a2a30;
+    border-radius:14px;
+    padding:32px 28px;
+    box-shadow:
+      0 20px 60px -15px rgba(0,0,0,0.9),
+      0 0 0 1px rgba(255,140,26,0.08),
+      0 0 60px -20px rgba(255,140,26,0.25);
+    position:relative;
+    overflow:hidden;
+  }
 
-        /* en-tête */
-        .panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-        }
+  /* ligne orange en haut */
+  .keyauth-panel::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:3px;
+    background:linear-gradient(90deg, transparent, #ff8c1a, transparent);
+  }
 
-        .panel-header h2 {
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: #1e1208;
-            text-shadow: 2px 2px 0 rgba(255, 200, 120, 0.8), 0 1px 0 #fff3e0;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+  /* ---------- LOGO / TITRE ---------- */
+  .ka-header {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-bottom:28px;
+  }
 
-        .panel-header h2 span {
-            background: #1e1208;
-            color: #ffb74d;
-            font-size: 1.2rem;
-            padding: 0.2rem 0.9rem;
-            border-radius: 100px;
-            letter-spacing: 0.5px;
-            text-shadow: none;
-            font-weight: 600;
-            box-shadow: inset 0 -2px 0 #00000055, 0 2px 5px #00000030;
-        }
+  .ka-logo {
+    width:52px;
+    height:52px;
+    border-radius:12px;
+    background:linear-gradient(135deg, #ff8c1a, #ff6a00);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:26px;
+    box-shadow:0 8px 20px -6px rgba(255,140,26,0.5);
+    margin-bottom:14px;
+  }
 
-        /* la clé (key) */
-        .key-box {
-            background: #1e1208;
-            padding: 1.1rem 1.8rem;
-            border-radius: 100px;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-            box-shadow: 
-                inset 0 0 0 1px #ffb74d,
-                0 10px 20px -8px black,
-                0 0 0 3px #ff8c1a80;
-            border: 1px solid #ffa726;
-        }
+  .ka-title {
+    font-size:20px;
+    font-weight:700;
+    color:#fff;
+    letter-spacing:-0.3px;
+  }
 
-        .key-label {
-            color: #ffb74d;
-            font-weight: 600;
-            letter-spacing: 1px;
-            font-size: 1rem;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+  .ka-subtitle {
+    font-size:13px;
+    color:#7a7a85;
+    margin-top:4px;
+  }
 
-        .key-label i {
-            font-size: 1.4rem;
-            font-style: normal;
-            filter: drop-shadow(0 0 5px #ffb74d);
-        }
+  /* ---------- STATUS ---------- */
+  .ka-status {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#1c1c22;
+    border:1px solid #2a2a30;
+    border-radius:10px;
+    padding:12px 16px;
+    margin-bottom:16px;
+    font-size:13px;
+  }
 
-        .key-value {
-            background: #0b0804;
-            color: #ffd966;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 1.5rem;
-            font-weight: 700;
-            padding: 0.5rem 1.4rem;
-            border-radius: 60px;
-            letter-spacing: 1.5px;
-            border: 1px solid #ffb74d;
-            box-shadow: inset 0 0 15px #ff8c1a30, 0 5px 0 #0a0600;
-            word-break: break-all;
-            text-align: center;
-            transition: 0.2s;
-            cursor: pointer;
-            user-select: all;
-        }
+  .ka-status-label {
+    color:#7a7a85;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
 
-        .key-value:hover {
-            background: #1d140c;
-            box-shadow: inset 0 0 20px #ffb74d60, 0 5px 0 #0a0600;
-            color: #ffebc2;
-        }
+  .ka-status-dot {
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#22c55e;
+    box-shadow:0 0 8px #22c55e;
+    animation:pulse 2s infinite;
+  }
 
-        /* ---------- INFO HWID ---------- */
-        .hwid-section {
-            background: #c95f00;
-            background: linear-gradient(135deg, #b35200, #d46b00);
-            border-radius: 2rem 2rem 2rem 2rem;
-            padding: 1.6rem 1.8rem;
-            margin-bottom: 2.2rem;
-            box-shadow: 
-                inset 0 0 0 1px #ffb86b,
-                0 12px 18px -12px black,
-                inset 0 -4px 8px #5e2c00,
-                inset 0 4px 8px #ffb86b90;
-            border-bottom: 2px solid #ffb86b;
-        }
+  @keyframes pulse {
+    0%,100% { opacity:1; }
+    50% { opacity:0.4; }
+  }
 
-        .hwid-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: #1e1208;
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 0.9rem;
-            letter-spacing: 0.3px;
-            text-shadow: 0 1px 0 #ffbb77;
-        }
+  .ka-status-value {
+    color:#ff8c1a;
+    font-weight:600;
+    font-family:'SF Mono','Fira Code',monospace;
+    font-size:12px;
+  }
 
-        .hwid-header i {
-            font-style: normal;
-            background: #1e1208;
-            color: #ffb74d;
-            border-radius: 100px;
-            padding: 0.1rem 0.8rem;
-            font-size: 0.9rem;
-        }
+  /* ---------- KEY DISPLAY ---------- */
+  .ka-key-box {
+    background:#1c1c22;
+    border:1px solid #2a2a30;
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:16px;
+    transition:border-color 0.2s;
+  }
 
-        .hwid-value {
-            background: #1a0f06;
-            padding: 1rem 1.4rem;
-            border-radius: 2rem;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 1.1rem;
-            color: #ffcf9a;
-            border: 1px solid #ffb055;
-            box-shadow: inset 0 0 18px #00000080, 0 2px 0 #ffb86b;
-            word-break: break-all;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-        }
+  .ka-key-box:hover {
+    border-color:#ff8c1a55;
+  }
 
-        .hwid-badge {
-            background: #ffb74d;
-            color: #1e1208;
-            font-weight: 700;
-            padding: 0.25rem 1.2rem;
-            border-radius: 40px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            box-shadow: inset 0 -2px 0 #b35200, 0 2px 0 #1e1208;
-        }
+  .ka-key-label {
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#7a7a85;
+    margin-bottom:8px;
+    font-weight:600;
+  }
 
-        /* ---------- BOUTON RESET HWID (ORANGE FONCÉ) ---------- */
-        .reset-btn {
-            background: #d45d00;
-            background: linear-gradient(145deg, #e06b00, #b34f00);
-            border: none;
-            width: 100%;
-            padding: 1.4rem 2rem;
-            border-radius: 100px;
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            color: #1e1208;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            cursor: pointer;
-            box-shadow: 
-                0 15px 20px -10px black,
-                0 0 0 2px #ffb74d,
-                inset 0 -8px 0 #7a3600,
-                inset 0 8px 12px #ffd58c;
-            transition: all 0.1s ease;
-            border-bottom: 2px solid #ffd966;
-            font-family: inherit;
-            text-shadow: 0 1px 0 #ffbb77;
-        }
+  .ka-key-value {
+    font-family:'SF Mono','Fira Code',monospace;
+    font-size:15px;
+    font-weight:600;
+    color:#ff8c1a;
+    letter-spacing:1px;
+    cursor:pointer;
+    user-select:all;
+    word-break:break-all;
+    transition:color 0.15s;
+  }
 
-        .reset-btn:hover {
-            background: #e06b00;
-            background: linear-gradient(145deg, #f07c0a, #c25a00);
-            box-shadow: 
-                0 18px 25px -10px black,
-                0 0 0 3px #ffd966,
-                inset 0 -6px 0 #7a3600,
-                inset 0 10px 15px #ffecb3;
-            transform: scale(1.01);
-        }
+  .ka-key-value:hover {
+    color:#ffb74d;
+  }
 
-        .reset-btn:active {
-            transform: translateY(5px);
-            box-shadow: 
-                0 8px 15px -8px black,
-                0 0 0 2px #ffb74d,
-                inset 0 -3px 0 #7a3600,
-                inset 0 5px 15px #ffb74d;
-            transition: 0.05s;
-        }
+  /* ---------- HWID BOX ---------- */
+  .ka-hwid-box {
+    background:#1c1c22;
+    border:1px solid #2a2a30;
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:20px;
+    position:relative;
+    overflow:hidden;
+  }
 
-        .reset-btn i {
-            font-style: normal;
-            font-size: 2rem;
-            filter: drop-shadow(0 2px 0 #633000);
-        }
+  .ka-hwid-box::after {
+    content:'';
+    position:absolute;
+    top:0; left:0;
+    width:3px;
+    height:100%;
+    background:#ff8c1a;
+  }
 
-        /* message de feedback */
-        .feedback {
-            margin-top: 1.5rem;
-            text-align: center;
-            font-weight: 600;
-            color: #1e1208;
-            background: #ffb86bcc;
-            padding: 0.8rem;
-            border-radius: 60px;
-            backdrop-filter: blur(4px);
-            font-size: 1rem;
-            border: 1px solid #ffd966;
-            box-shadow: inset 0 0 8px #fff3e0;
-            min-height: 3.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
-            word-break: break-word;
-        }
+  .ka-hwid-header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:8px;
+  }
 
-        /* toast / petit effet */
-        .toast-message {
-            transition: all 0.2s ease;
-        }
+  .ka-hwid-label {
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#7a7a85;
+    font-weight:600;
+  }
 
-        /* responsive */
-        @media (max-width: 480px) {
-            .panel {
-                padding: 1.8rem 1.2rem 1.8rem;
-                border-radius: 2rem 1rem 2rem 1rem;
-            }
-            .panel-header h2 {
-                font-size: 1.6rem;
-            }
-            .key-value {
-                font-size: 1.1rem;
-                padding: 0.4rem 0.8rem;
-            }
-            .reset-btn {
-                font-size: 1.2rem;
-                padding: 1.1rem 1rem;
-            }
-            .hwid-value {
-                font-size: 0.9rem;
-            }
-        }
-    </style>
+  .ka-hwid-badge {
+    font-size:10px;
+    background:#ff8c1a20;
+    color:#ff8c1a;
+    border:1px solid #ff8c1a40;
+    padding:2px 8px;
+    border-radius:20px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+  }
+
+  .ka-hwid-value {
+    font-family:'SF Mono','Fira Code',monospace;
+    font-size:14px;
+    color:#e8e8e8;
+    letter-spacing:0.5px;
+    word-break:break-all;
+  }
+
+  /* ---------- BUTTONS ---------- */
+  .ka-btn {
+    width:100%;
+    padding:13px 20px;
+    border:none;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:0.3px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    transition:all 0.15s ease;
+    font-family:inherit;
+  }
+
+  .ka-btn-primary {
+    background:linear-gradient(135deg, #ff8c1a, #ff6a00);
+    color:#fff;
+    box-shadow:0 8px 20px -8px rgba(255,140,26,0.6);
+    margin-bottom:10px;
+  }
+
+  .ka-btn-primary:hover {
+    transform:translateY(-1px);
+    box-shadow:0 12px 25px -8px rgba(255,140,26,0.8);
+    background:linear-gradient(135deg, #ffa040, #ff7a10);
+  }
+
+  .ka-btn-primary:active {
+    transform:translateY(1px);
+    box-shadow:0 4px 12px -6px rgba(255,140,26,0.6);
+  }
+
+  .ka-btn-secondary {
+    background:#1c1c22;
+    color:#b8b8c0;
+    border:1px solid #2a2a30;
+  }
+
+  .ka-btn-secondary:hover {
+    background:#22222a;
+    color:#fff;
+    border-color:#ff8c1a40;
+  }
+
+  /* ---------- FOOTER ---------- */
+  .ka-footer {
+    margin-top:20px;
+    text-align:center;
+    font-size:11px;
+    color:#5a5a65;
+    letter-spacing:0.3px;
+  }
+
+  .ka-footer span {
+    color:#ff8c1a;
+    font-weight:600;
+  }
+
+  /* ---------- LOADER ---------- */
+  .ka-spinner {
+    width:16px;
+    height:16px;
+    border:2px solid #ffffff40;
+    border-top-color:#fff;
+    border-radius:50%;
+    animation:spin 0.7s linear infinite;
+    display:none;
+  }
+
+  .ka-btn-primary.loading .ka-spinner {
+    display:block;
+  }
+
+  .ka-btn-primary.loading .ka-btn-icon {
+    display:none;
+  }
+
+  @keyframes spin {
+    to { transform:rotate(360deg); }
+  }
+
+  /* ---------- TOAST ---------- */
+  .ka-toast {
+    position:fixed;
+    bottom:24px;
+    left:50%;
+    transform:translateX(-50%) translateY(100px);
+    background:#1c1c22;
+    color:#fff;
+    padding:12px 20px;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:500;
+    border:1px solid #2a2a30;
+    box-shadow:0 10px 30px -10px rgba(0,0,0,0.9);
+    opacity:0;
+    transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    max-width:90%;
+  }
+
+  .ka-toast.show {
+    transform:translateX(-50%) translateY(0);
+    opacity:1;
+  }
+
+  .ka-toast.success {
+    border-color:#22c55e40;
+  }
+
+  .ka-toast.success .ka-toast-dot {
+    background:#22c55e;
+    box-shadow:0 0 8px #22c55e;
+  }
+
+  .ka-toast.error {
+    border-color:#ef444440;
+  }
+
+  .ka-toast.error .ka-toast-dot {
+    background:#ef4444;
+    box-shadow:0 0 8px #ef4444;
+  }
+
+  .ka-toast-dot {
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#ff8c1a;
+    box-shadow:0 0 8px #ff8c1a;
+    flex-shrink:0;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:520px) {
+    .keyauth-panel { padding:26px 20px; border-radius:12px; }
+    .ka-key-value { font-size:13px; }
+    .ka-hwid-value { font-size:12px; }
+  }
+</style>
 </head>
 <body>
-    <div class="panel">
-        <!-- En-tête -->
-        <div class="panel-header">
-            <h2>
-                🔑 PANEL KEY
-                <span>ORANGE</span>
-            </h2>
-        </div>
 
-        <!-- Affichage de la clé -->
-        <div class="key-box">
-            <div class="key-label"><i>🗝️</i> KEY</div>
-            <div class="key-value" id="keyDisplay" title="Cliquez pour copier">ORANGE-7X9K-2M4P-8Q1Z</div>
-        </div>
+<div class="keyauth-panel">
 
-        <!-- Section HWID -->
-        <div class="hwid-section">
-            <div class="hwid-header">
-                <span>💻 HWID actuel</span>
-                <i>identifiant unique</i>
-            </div>
-            <div class="hwid-value" id="hwidDisplay">
-                <span id="hwidText">A1B2-C3D4-E5F6-7890</span>
-                <span class="hwid-badge">verrouillé</span>
-            </div>
-        </div>
+  <!-- Header -->
+  <div class="ka-header">
+    <div class="ka-logo">🔐</div>
+    <div class="ka-title">KeyAuth Panel</div>
+    <div class="ka-subtitle">License Management System</div>
+  </div>
 
-        <!-- Bouton RESET HWID -->
-        <button class="reset-btn" id="resetHwidBtn">
-            <i>🔄</i> RESET HWID
-        </button>
-
-        <!-- Feedback -->
-        <div class="feedback" id="feedbackMessage">
-            Prêt à réinitialiser
-        </div>
+  <!-- Status -->
+  <div class="ka-status">
+    <div class="ka-status-label">
+      <span class="ka-status-dot"></span>
+      Statut du compte
     </div>
+    <div class="ka-status-value" id="statusValue">ACTIF</div>
+  </div>
 
-    <script>
-        (function() {
-            // ----- ÉLÉMENTS DOM -----
-            const keyDisplay = document.getElementById('keyDisplay');
-            const hwidText = document.getElementById('hwidText');
-            const resetBtn = document.getElementById('resetHwidBtn');
-            const feedback = document.getElementById('feedbackMessage');
+  <!-- Key -->
+  <div class="ka-key-box">
+    <div class="ka-key-label">License Key</div>
+    <div class="ka-key-value" id="keyValue" title="Cliquez pour copier">
+      ORNG-7X9K-2M4P-8Q1Z
+    </div>
+  </div>
 
-            // ----- GÉNÉRATION DE HWID ALÉATOIRE (format 4x4) -----
-            function generateRandomHWID() {
-                const chars = 'ABCDEF0123456789';
-                const segments = [];
-                for (let s = 0; s < 4; s++) {
-                    let segment = '';
-                    for (let i = 0; i < 4; i++) {
-                        segment += chars.charAt(Math.floor(Math.random() * chars.length));
-                    }
-                    segments.push(segment);
-                }
-                return segments.join('-');
-            }
+  <!-- HWID -->
+  <div class="ka-hwid-box">
+    <div class="ka-hwid-header">
+      <div class="ka-hwid-label">Hardware ID (HWID)</div>
+      <div class="ka-hwid-badge" id="hwidBadge">Lié</div>
+    </div>
+    <div class="ka-hwid-value" id="hwidValue">A1B2-C3D4-E5F6-7890</div>
+  </div>
 
-            // ----- GÉNÉRATION D'UNE NOUVELLE CLÉ (pour le fun, on garde le style orange) -----
-            function generateRandomKey() {
-                const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
-                const digits = '0123456789';
-                const allChars = letters + digits;
-                const parts = [];
-                // Format: XXXX-XXXX-XXXX-XXXX (4 blocs de 4)
-                for (let b = 0; b < 4; b++) {
-                    let part = '';
-                    for (let i = 0; i < 4; i++) {
-                        part += allChars.charAt(Math.floor(Math.random() * allChars.length));
-                    }
-                    parts.push(part);
-                }
-                return parts.join('-');
-            }
+  <!-- Boutons -->
+  <button class="ka-btn ka-btn-primary" id="resetBtn">
+    <span class="ka-btn-icon">🔄</span>
+    <span class="ka-spinner"></span>
+    <span id="resetBtnText">Reset HWID</span>
+  </button>
 
-            // ----- INITIALISATION (première visite) -----
-            function initializeHWID() {
-                // on force un HWID existant (simulé)
-                const initialHWID = 'A1B2-C3D4-E5F6-7890';
-                hwidText.textContent = initialHWID;
-            }
+  <button class="ka-btn ka-btn-secondary" id="copyBtn">
+    📋 Copier la clé
+  </button>
 
-            // ----- MISE À JOUR DU HWID (avec animation de feedback) -----
-            function resetHWID() {
-                // Génère un nouvel identifiant
-                const newHWID = generateRandomHWID();
-                hwidText.textContent = newHWID;
+  <!-- Footer -->
+  <div class="ka-footer">
+    Propulsé par <span>KeyAuth</span> · v1.0
+  </div>
 
-                // Change aussi la clé ? optionnel : on régénère la clé pour un effet "reset" complet
-                // (facultatif, mais amusant)
-                const newKey = generateRandomKey();
-                keyDisplay.textContent = newKey;
+</div>
 
-                // Message de confirmation
-                feedback.textContent = `✅ HWID réinitialisé → ${newHWID}`;
-                feedback.style.background = '#b3ffb3cc';
-                feedback.style.color = '#0a2e0a';
-                feedback.style.borderColor = '#7acc7a';
-                feedback.style.fontWeight = '700';
+<!-- Toast -->
+<div class="ka-toast" id="toast">
+  <span class="ka-toast-dot"></span>
+  <span id="toastText">Message</span>
+</div>
 
-                // Reset du style après 3 secondes
-                setTimeout(() => {
-                    feedback.textContent = 'Prêt à réinitialiser';
-                    feedback.style.background = '#ffb86bcc';
-                    feedback.style.color = '#1e1208';
-                    feedback.style.borderColor = '#ffd966';
-                }, 3000);
-            }
+<script>
+(function() {
+  // ---------- ÉLÉMENTS ----------
+  const keyValue = document.getElementById('keyValue');
+  const hwidValue = document.getElementById('hwidValue');
+  const hwidBadge = document.getElementById('hwidBadge');
+  const resetBtn = document.getElementById('resetBtn');
+  const resetBtnText = document.getElementById('resetBtnText');
+  const copyBtn = document.getElementById('copyBtn');
+  const toast = document.getElementById('toast');
+  const toastText = document.getElementById('toastText');
+  const statusValue = document.getElementById('statusValue');
 
-            // ----- COPIE DE LA CLÉ (clic) -----
-            function copyKeyToClipboard() {
-                const key = keyDisplay.textContent.trim();
-                navigator.clipboard.writeText(key).then(() => {
-                    feedback.textContent = `📋 Clé copiée : ${key}`;
-                    feedback.style.background = '#ffd966cc';
-                    feedback.style.color = '#1e1208';
-                    feedback.style.borderColor = '#ffb74d';
-                    setTimeout(() => {
-                        feedback.textContent = 'Prêt à réinitialiser';
-                        feedback.style.background = '#ffb86bcc';
-                        feedback.style.borderColor = '#ffd966';
-                    }, 2000);
-                }).catch(() => {
-                    // Fallback
-                    alert('Clé : ' + key);
-                });
-            }
+  // ---------- UTILITAIRES ----------
+  function generateHWID() {
+    const chars = 'ABCDEF0123456789';
+    const seg = () => Array.from({length:4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+    return [seg(), seg(), seg(), seg()].join('-');
+  }
 
-            // ----- ÉCOUTEURS D'ÉVÉNEMENTS -----
-            resetBtn.addEventListener('click', resetHWID);
+  function generateKey() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789';
+    const seg = () => Array.from({length:4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+    return [seg(), seg(), seg(), seg()].join('-');
+  }
 
-            keyDisplay.addEventListener('click', copyKeyToClipboard);
+  function showToast(message, type = 'info') {
+    toastText.textContent = message;
+    toast.className = 'ka-toast show ' + type;
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2800);
+  }
 
-            // (Optionnel) double-clic pour regénérer la clé seulement (bonus)
-            keyDisplay.addEventListener('dblclick', function(e) {
-                e.stopPropagation();
-                const newKey = generateRandomKey();
-                keyDisplay.textContent = newKey;
-                feedback.textContent = `🔑 Nouvelle clé générée : ${newKey}`;
-                feedback.style.background = '#ffe0b3cc';
-                setTimeout(() => {
-                    feedback.textContent = 'Prêt à réinitialiser';
-                    feedback.style.background = '#ffb86bcc';
-                }, 2000);
-            });
+  function setLoading(state) {
+    if (state) {
+      resetBtn.classList.add('loading');
+      resetBtn.disabled = true;
+      resetBtnText.textContent = 'Réinitialisation...';
+    } else {
+      resetBtn.classList.remove('loading');
+      resetBtn.disabled = false;
+      resetBtnText.textContent = 'Reset HWID';
+    }
+  }
 
-            // Initialisation : HWID de départ
-            initializeHWID();
+  // ---------- ACTIONS ----------
+  function resetHWID() {
+    setLoading(true);
+    hwidBadge.textContent = 'Reset...';
+    hwidBadge.style.color = '#ffb74d';
+    hwidBadge.style.background = '#ffb74d20';
+    hwidBadge.style.borderColor = '#ffb74d40';
 
-            // petite touche : s'assurer que la clé affichée est cohérente
-            // (on garde la clé initiale du HTML, mais on peut la régénérer)
-            // Pour que ce soit propre, on garde celle du HTML.
-            // Mais on peut aussi la générer au chargement (optionnel)
-            // Décommenter la ligne suivante pour une clé aléatoire au chargement :
-            // keyDisplay.textContent = generateRandomKey();
-        })();
-    </script>
+    // simulation d'appel API (comme KeyAuth)
+    setTimeout(() => {
+      const newHWID = generateHWID();
+      const newKey = generateKey();
+
+      hwidValue.textContent = newHWID;
+      keyValue.textContent = newKey;
+
+      hwidBadge.textContent = 'Lié';
+      hwidBadge.style.color = '#ff8c1a';
+      hwidBadge.style.background = '#ff8c1a20';
+      hwidBadge.style.borderColor = '#ff8c1a40';
+
+      statusValue.textContent = 'ACTIF';
+      statusValue.style.color = '#ff8c1a';
+
+      setLoading(false);
+      showToast('HWID réinitialisé avec succès', 'success');
+    }, 1200);
+  }
+
+  function copyKey() {
+    const key = keyValue.textContent.trim();
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(key)
+        .then(() => showToast('Clé copiée : ' + key, 'success'))
+        .catch(() => showToast('Erreur de copie', 'error'));
+    } else {
+      // fallback
+      const ta = document.createElement('textarea');
+      ta.value = key;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Clé copiée : ' + key, 'success');
+    }
+  }
+
+  // ---------- ÉVÉNEMENTS ----------
+  resetBtn.addEventListener('click', resetHWID);
+  copyBtn.addEventListener('click', copyKey);
+  keyValue.addEventListener('click', copyKey);
+
+  // double-clic sur la clé = régénérer uniquement la clé
+  keyValue.addEventListener('dblclick', (e) => {
+    e.stopPropagation();
+    const newKey = generateKey();
+    keyValue.textContent = newKey;
+    showToast('Nouvelle clé générée : ' + newKey, 'success');
+  });
+
+  // ---------- INIT ----------
+  // état initial : compte lié
+  statusValue.textContent = 'ACTIF';
+  statusValue.style.color = '#ff8c1a';
+  hwidBadge.textContent = 'Lié';
+})();
+</script>
+
 </body>
 </html>
