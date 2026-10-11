@@ -2,541 +2,802 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KeyAuth · Orange Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0b0d">
+<title>Raxo — Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter','Segoe UI',system-ui,sans-serif; }
+:root{
+  --bg:#08090b;--side:rgba(18,19,23,.78);--panel:rgba(24,26,31,.88);--panel-2:rgba(30,32,38,.88);
+  --text:#f6f7f9;--text-2:#b8bcc4;--mute:#7a7f8a;--dim:#4f545e;
+  --red:#e6e8ec;--red-glow:rgba(230,232,236,.35);
+  --ok:#8fd9a8;--ok-glow:rgba(143,217,168,.35);
+  --warn:#e8c88a;--warn-glow:rgba(232,200,138,.35);
+  --blue:#a8b8d0;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font:14px/1.6 var(--sans);font-weight:500;min-height:100vh;min-height:100dvh;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(1200px 600px at 15% -10%,rgba(200,205,215,.06),transparent 55%),radial-gradient(900px 500px at 90% 110%,rgba(160,170,190,.05),transparent 55%)}
+button,input,select,textarea{font:inherit;color:inherit;font-weight:500}
+input,select,textarea{font-weight:600}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:8px}
+[hidden]{display:none!important}
+::selection{background:var(--red-glow);color:#fff}
+::-webkit-scrollbar{width:12px;height:12px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(200,205,215,.30),rgba(200,205,215,.12));border-radius:12px;border:3px solid transparent;background-clip:padding-box}
 
-  body {
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#0d0d0f;
-    background-image:
-      radial-gradient(circle at 20% 20%, #ff8c1a15 0%, transparent 40%),
-      radial-gradient(circle at 80% 80%, #ff8c1a10 0%, transparent 40%);
-    padding:20px;
-    color:#e8e8e8;
-  }
+@keyframes riseIn{from{opacity:0;transform:translateY(28px) scale(.96);filter:blur(6px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.92) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes slideRight{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideLeft{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.85)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes borderFlow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes fadeIn{from{opacity:0}}
 
-  /* ---------- PANEL PRINCIPAL ---------- */
-  .keyauth-panel {
-    width:100%;
-    max-width:480px;
-    background:#16161a;
-    border:1px solid #2a2a30;
-    border-radius:14px;
-    padding:32px 28px;
-    box-shadow:
-      0 20px 60px -15px rgba(0,0,0,0.9),
-      0 0 0 1px rgba(255,140,26,0.08),
-      0 0 60px -20px rgba(255,140,26,0.25);
-    position:relative;
-    overflow:hidden;
-  }
+#login{position:fixed;inset:0;display:grid;place-items:center;padding:20px;z-index:100;background:radial-gradient(1000px 700px at 50% -10%,rgba(200,205,215,.14),transparent 60%),radial-gradient(900px 600px at 85% 110%,rgba(160,170,190,.10),transparent 60%),var(--bg)}
+.lbox{position:relative;z-index:2;width:100%;max-width:440px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015)),linear-gradient(180deg,rgba(24,26,31,.96),rgba(18,19,23,.94));backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.10);border-radius:28px;padding:44px 36px;box-shadow:0 60px 140px -40px rgba(0,0,0,1),0 0 80px -20px rgba(200,205,215,.20);animation:riseIn .9s cubic-bezier(.16,1,.3,1) both;overflow:hidden}
+.lbox::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#e6e8ec,#a8b8d0,transparent);background-size:200% 100%;animation:borderFlow 4s linear infinite}
+.lbox .logo-wrap{width:76px;height:76px;border-radius:20px;background:linear-gradient(135deg,rgba(230,232,236,.12),rgba(230,232,236,.02));border:1px solid rgba(230,232,236,.25);display:grid;place-items:center;margin:0 auto 24px;box-shadow:0 15px 40px -10px var(--red-glow);animation:float 4s ease-in-out infinite}
+.lbox .logo-wrap .fallback{font-size:38px;font-weight:900;color:#e6e8ec}
+.lbox h1{font-size:28px;font-weight:800;letter-spacing:-.035em;margin-bottom:8px;text-align:center;background:linear-gradient(180deg,#fff,#b8bcc4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lbox p{color:var(--mute);margin-bottom:32px;font-size:14px;text-align:center;font-weight:500}
+.lbox input{width:100%;padding:16px 18px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.10);border-radius:14px;margin-bottom:16px;outline:none;transition:all .25s cubic-bezier(.2,.8,.2,1);font-size:15px;font-weight:600;color:#fff}
+.lbox input::placeholder{color:rgba(184,188,196,.4);font-weight:500}
+.lbox input:focus{border-color:#e6e8ec;box-shadow:0 0 0 4px var(--red-glow);background:rgba(0,0,0,.6)}
+.err{color:#e6e8ec;font-size:13px;margin-top:16px;padding:14px 16px;background:linear-gradient(180deg,rgba(230,232,236,.10),rgba(230,232,236,.03));border-radius:12px;border-left:3px solid #e6e8ec;font-weight:600;animation:slideRight .35s ease both}
 
-  /* ligne orange en haut */
-  .keyauth-panel::before {
-    content:'';
-    position:absolute;
-    top:0; left:0; right:0;
-    height:3px;
-    background:linear-gradient(90deg, transparent, #ff8c1a, transparent);
-  }
+#app{display:grid;grid-template-columns:270px 1fr;min-height:100vh;min-height:100dvh;position:relative;z-index:2}
+#app:not([hidden]){animation:fadeIn .6s ease both}
+aside{background:linear-gradient(180deg,rgba(255,255,255,.03),transparent 40%),var(--side);backdrop-filter:blur(28px);border-right:1px solid rgba(255,255,255,.05);padding:24px 16px;display:flex;flex-direction:column;gap:5px;position:sticky;top:0;height:100vh;height:100dvh;z-index:30;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:14px;font-weight:800;font-size:17px;letter-spacing:-.03em;padding:8px 12px 26px;position:relative}
+.brand::after{content:"";position:absolute;bottom:12px;left:12px;right:12px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent)}
+.brand .logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,rgba(230,232,236,.14),rgba(230,232,236,.03));border:1px solid rgba(230,232,236,.25);display:grid;place-items:center;flex:0 0 auto;box-shadow:0 8px 24px -6px var(--red-glow)}
+.brand .logo .fallback{font-size:22px;font-weight:900;color:#e6e8ec}
+.brand .name b{color:var(--text);display:block;font-weight:800;letter-spacing:-.03em}
+.brand .name small{display:block;font-size:10.5px;font-weight:700;color:var(--mute);letter-spacing:1.2px;text-transform:uppercase;margin-top:2px}
 
-  /* ---------- LOGO / TITRE ---------- */
-  .ka-header {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    margin-bottom:28px;
-  }
+.nav{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;color:var(--mute);font-weight:600;font-size:14px;cursor:pointer;background:none;border:0;text-align:left;width:100%;transition:all .22s cubic-bezier(.2,.8,.2,1);position:relative;overflow:hidden}
+.nav::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(230,232,236,.10),rgba(230,232,236,.02) 60%,transparent);opacity:0;transition:opacity .22s ease}
+.nav:hover{color:var(--text-2);transform:translateX(3px)}
+.nav:hover::before{opacity:1}
+.nav.on{color:var(--text);transform:translateX(4px)}
+.nav.on::before{opacity:1}
+.nav.on::after{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;background:linear-gradient(180deg,#e6e8ec,#a8adb6);border-radius:0 3px 3px 0;box-shadow:0 0 14px var(--red-glow)}
+.nav > *{position:relative;z-index:1}
+.nav svg{width:18px;height:18px;flex:0 0 auto;opacity:.9;transition:all .22s ease}
+.nav.on svg{color:#e6e8ec;opacity:1}
+.nav small{margin-left:auto;font-size:11.5px;font-weight:800;color:var(--dim);font-variant-numeric:tabular-nums;background:rgba(255,255,255,.06);padding:3px 9px;border-radius:7px;min-width:26px;text-align:center;transition:all .22s ease}
+.nav.on small{color:#08090b;background:linear-gradient(180deg,#f0f2f5,#c8ccd3)}
+.bottom{margin-top:auto;padding-top:18px;border-top:1px solid rgba(255,255,255,.05)}
 
-  .ka-logo {
-    width:52px;
-    height:52px;
-    border-radius:12px;
-    background:linear-gradient(135deg, #ff8c1a, #ff6a00);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:26px;
-    box-shadow:0 8px 20px -6px rgba(255,140,26,0.5);
-    margin-bottom:14px;
-  }
+main{padding:32px 40px 80px;min-width:0;position:relative}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:32px;animation:riseIn .6s cubic-bezier(.2,.8,.2,1) both}
+.page-head{display:flex;flex-direction:column;gap:6px}
+h1.t{font-size:34px;font-weight:800;letter-spacing:-.04em;line-height:1.15;background:linear-gradient(180deg,#fff 20%,#b8bcc4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.t-sub{font-size:14px;color:var(--mute);font-weight:500}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
 
-  .ka-title {
-    font-size:20px;
-    font-weight:700;
-    color:#fff;
-    letter-spacing:-0.3px;
-  }
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));font-weight:700;font-size:13.5px;letter-spacing:-.01em;cursor:pointer;transition:all .22s cubic-bezier(.2,.8,.2,1);white-space:nowrap;box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 2px 6px rgba(0,0,0,.3);position:relative;overflow:hidden}
+.btn::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.15) 50%,transparent 70%);background-size:200% 100%;opacity:0;transition:opacity .3s ease}
+.btn:hover::before{opacity:1;animation:shimmer 1.2s linear infinite}
+.btn:hover{border-color:rgba(255,255,255,.22);background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.04));transform:translateY(-2px)}
+.btn:active{transform:translateY(0) scale(.97)}
+.btn svg{width:15px;height:15px;flex:0 0 auto}
+.btn.red{background:linear-gradient(135deg,#f4f5f7,#c8ccd3 60%,#a8adb6);border-color:rgba(230,232,236,.35);color:#08090b;font-weight:800}
+.btn.ghost{background:transparent;border-color:rgba(255,255,255,.08)}
+.btn.ghost:hover{background:rgba(255,255,255,.05)}
+.btn.sm{padding:6px 12px;font-size:12px;border-radius:9px;font-weight:700}
+.btn.sm svg{width:13px;height:13px}
+.btn.danger:hover{color:#e6e8ec;border-color:rgba(230,232,236,.5);background:rgba(230,232,236,.08)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
 
-  .ka-subtitle {
-    font-size:13px;
-    color:#7a7a85;
-    margin-top:4px;
-  }
+.card{background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 250px),var(--panel);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:22px;overflow:hidden;box-shadow:0 40px 100px -50px rgba(0,0,0,1);animation:riseIn .55s cubic-bezier(.2,.8,.2,1) both;position:relative}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(230,232,236,.4),rgba(168,184,208,.3),transparent);opacity:.7}
 
-  /* ---------- STATUS ---------- */
-  .ka-status {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    background:#1c1c22;
-    border:1px solid #2a2a30;
-    border-radius:10px;
-    padding:12px 16px;
-    margin-bottom:16px;
-    font-size:13px;
-  }
+.tb{display:flex;gap:12px;padding:18px 20px;border-bottom:1px solid rgba(255,255,255,.05);flex-wrap:wrap;align-items:center;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
+.tb input,.fld input{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:12px 16px;outline:none;transition:all .22s cubic-bezier(.2,.8,.2,1);font-size:14px;font-weight:600;color:#fff}
+.tb input::placeholder,.fld input::placeholder{color:rgba(184,188,196,.4);font-weight:500}
+.tb input:focus,.fld input:focus{border-color:#e6e8ec;box-shadow:0 0 0 4px var(--red-glow);background:rgba(0,0,0,.6)}
 
-  .ka-status-label {
-    color:#7a7a85;
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
+.search-wrap{position:relative;flex:1;min-width:240px}
+.search-wrap input{width:100%;padding-left:44px}
+.search-wrap::before{content:"";position:absolute;left:16px;top:50%;transform:translateY(-50%);width:16px;height:16px;pointer-events:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237a7f8a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.35-4.35'/></svg>");background-size:contain;background-repeat:no-repeat;opacity:.7}
 
-  .ka-status-dot {
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:#22c55e;
-    box-shadow:0 0 8px #22c55e;
-    animation:pulse 2s infinite;
-  }
+.dropdown{position:relative;user-select:none;min-width:180px}
+.dropdown-trigger{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:12px 16px;font-size:14px;font-weight:600;color:#fff;cursor:pointer;transition:all .22s cubic-bezier(.2,.8,.2,1);width:100%;text-align:left}
+.dropdown-trigger:hover{border-color:rgba(255,255,255,.20);background:rgba(0,0,0,.5)}
+.dropdown.open .dropdown-trigger{border-color:#e6e8ec;box-shadow:0 0 0 4px var(--red-glow);background:rgba(0,0,0,.6)}
+.dropdown-trigger svg{width:14px;height:14px;flex:0 0 auto;color:var(--mute);transition:transform .22s}
+.dropdown.open .dropdown-trigger svg{transform:rotate(180deg);color:#e6e8ec}
+.dropdown-menu{position:absolute;top:calc(100% + 6px);left:0;right:0;background:linear-gradient(180deg,rgba(38,40,47,.99),rgba(24,26,31,.99));backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:6px;z-index:1000;box-shadow:0 20px 50px -10px rgba(0,0,0,.9);animation:popIn .18s cubic-bezier(.2,.9,.3,1.1) both;max-height:420px;overflow-y:auto}
+.dropdown-menu.drop-up{top:auto;bottom:calc(100% + 6px)}
+.dropdown-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:8px;font-size:13.5px;font-weight:600;color:var(--text-2);cursor:pointer;transition:all .15s}
+.dropdown-item:hover{background:rgba(230,232,236,.10);color:#fff}
+.dropdown-item.active{background:linear-gradient(180deg,rgba(230,232,236,.18),rgba(230,232,236,.08));color:#fff;box-shadow:0 0 0 1px rgba(230,232,236,.30) inset}
+.dropdown-item .check{width:14px;height:14px;color:#e6e8ec;opacity:0}
+.dropdown-item.active .check{opacity:1}
 
-  @keyframes pulse {
-    0%,100% { opacity:1; }
-    50% { opacity:0.4; }
-  }
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th{text-align:left;padding:14px 20px;font-size:11.5px;color:var(--mute);font-weight:800;background:rgba(0,0,0,.35);border-bottom:1px solid rgba(255,255,255,.06);white-space:nowrap;text-transform:uppercase;letter-spacing:1px}
+td{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.04);white-space:nowrap;font-size:13.5px;font-weight:500}
+tr:last-child td{border-bottom:0}
+tbody tr{transition:all .22s}
+tbody tr:hover{background:linear-gradient(90deg,rgba(230,232,236,.05),transparent)}
+tbody tr:hover td:first-child{box-shadow:inset 3px 0 0 #e6e8ec}
 
-  .ka-status-value {
-    color:#ff8c1a;
-    font-weight:600;
-    font-family:'SF Mono','Fira Code',monospace;
-    font-size:12px;
-  }
+.key,.hw{font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.02em}
+.key{color:#e6e8ec;cursor:pointer;padding:5px 10px;border-radius:8px;background:linear-gradient(180deg,rgba(230,232,236,.10),rgba(230,232,236,.03));border:1px solid rgba(230,232,236,.16);transition:all .22s;display:inline-block}
+.key:hover{background:linear-gradient(180deg,rgba(230,232,236,.22),rgba(230,232,236,.08));border-color:rgba(230,232,236,.4);color:#fff;transform:translateY(-1px)}
+.hw{color:var(--text-2)}
+.mut{color:var(--mute);font-size:13px}
 
-  /* ---------- KEY DISPLAY ---------- */
-  .ka-key-box {
-    background:#1c1c22;
-    border:1px solid #2a2a30;
-    border-radius:10px;
-    padding:14px 16px;
-    margin-bottom:16px;
-    transition:border-color 0.2s;
-  }
+.badge{display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:99px;font-size:11.5px;font-weight:800;letter-spacing:.02em;border:1px solid transparent}
+.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:0 0 auto;box-shadow:0 0 10px currentColor}
+.badge.active{color:var(--ok);background:linear-gradient(180deg,rgba(143,217,168,.14),rgba(143,217,168,.05));border-color:rgba(143,217,168,.25)}
+.badge.expired{color:var(--warn);background:linear-gradient(180deg,rgba(232,200,138,.14),rgba(232,200,138,.05));border-color:rgba(232,200,138,.25)}
+.badge.banned{color:#e6e8ec;background:linear-gradient(180deg,rgba(230,232,236,.14),rgba(230,232,236,.05));border-color:rgba(230,232,236,.25)}
+.badge.warn{color:var(--warn);background:linear-gradient(180deg,rgba(232,200,138,.14),rgba(232,200,138,.05));border-color:rgba(232,200,138,.25)}
+.badge.active::before{animation:pulse 2.4s ease-in-out infinite}
 
-  .ka-key-box:hover {
-    border-color:#ff8c1a55;
-  }
+.row{display:flex;gap:8px}
+.view{display:none}
+.view.on{display:block;animation:riseIn .5s cubic-bezier(.2,.8,.2,1)}
 
-  .ka-key-label {
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:1px;
-    color:#7a7a85;
-    margin-bottom:8px;
-    font-weight:600;
-  }
+.empty{padding:60px 24px;text-align:center;color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:14px;font-size:14px;font-weight:500}
 
-  .ka-key-value {
-    font-family:'SF Mono','Fira Code',monospace;
-    font-size:15px;
-    font-weight:600;
-    color:#ff8c1a;
-    letter-spacing:1px;
-    cursor:pointer;
-    user-select:all;
-    word-break:break-all;
-    transition:color 0.15s;
-  }
+.modal{position:fixed;inset:0;background:rgba(4,5,8,.75);display:grid;place-items:center;padding:20px;z-index:200;animation:fadeIn .3s ease both;backdrop-filter:blur(14px)}
+.box{background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 120px),linear-gradient(180deg,rgba(30,32,38,.98),rgba(18,19,23,.98));border:1px solid rgba(255,255,255,.10);border-radius:22px;width:100%;max-width:480px;padding:32px;box-shadow:0 60px 140px -30px #000;animation:popIn .45s cubic-bezier(.2,.9,.3,1.15) both;position:relative;overflow:hidden}
+.box::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#e6e8ec,transparent);background-size:200% 100%;animation:borderFlow 3s linear infinite}
+.modal-header{display:flex;align-items:center;gap:14px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.06)}
+.modal-header .modal-logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(230,232,236,.14),rgba(230,232,236,.03));border:1px solid rgba(230,232,236,.25);display:grid;place-items:center;flex:0 0 auto}
+.modal-header .modal-logo .fallback{font-size:24px;font-weight:900;color:#e6e8ec}
+.modal-header .modal-title{display:flex;flex-direction:column;gap:2px}
+.modal-header .modal-title b{font-size:18px;font-weight:800;color:#fff;line-height:1.2}
+.modal-header .modal-title span{font-size:11px;font-weight:800;color:var(--mute);letter-spacing:1.2px;text-transform:uppercase}
+.fld{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.fld label{font-size:11.5px;font-weight:800;color:var(--mute);text-transform:uppercase;letter-spacing:1px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.foot{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}
+.out{background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:16px 18px;font-family:var(--mono);font-size:12.5px;color:#e6e8ec;font-weight:600;max-height:240px;overflow:auto;white-space:pre;margin-bottom:16px;line-height:1.8}
 
-  .ka-key-value:hover {
-    color:#ffb74d;
-  }
+#toasts{position:fixed;right:24px;bottom:calc(24px + var(--safe-b));display:flex;flex-direction:column;gap:12px;z-index:300;pointer-events:none}
+.toast{display:flex;align-items:center;gap:13px;background:linear-gradient(180deg,rgba(255,255,255,.05),transparent),linear-gradient(180deg,rgba(38,40,47,.98),rgba(24,26,31,.98));border:1px solid rgba(255,255,255,.12);border-left:3px solid var(--mute);border-radius:14px;padding:15px 20px;min-width:260px;font-weight:700;font-size:13.5px;box-shadow:0 30px 70px -20px rgba(0,0,0,.95);animation:slideLeft .4s cubic-bezier(.2,.9,.3,1.1) both;backdrop-filter:blur(20px);pointer-events:auto}
+.toast svg{width:18px;height:18px;flex:0 0 auto}
+.toast.success{border-left-color:var(--ok)}
+.toast.success svg{color:var(--ok)}
+.toast.error{border-left-color:#e6e8ec}
+.toast.error svg{color:#e6e8ec}
 
-  /* ---------- HWID BOX ---------- */
-  .ka-hwid-box {
-    background:#1c1c22;
-    border:1px solid #2a2a30;
-    border-radius:10px;
-    padding:14px 16px;
-    margin-bottom:20px;
-    position:relative;
-    overflow:hidden;
-  }
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.045),transparent 60%),var(--panel);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px 24px;transition:all .35s;animation:riseIn .5s cubic-bezier(.2,.8,.2,1) both}
+.stat::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent,var(--red)),transparent);opacity:.7}
+.stat:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.16)}
+.stat .ico{width:38px;height:38px;border-radius:11px;background:var(--accent-bg,rgba(255,255,255,.06));color:var(--accent,var(--text-2));display:grid;place-items:center;margin-bottom:14px}
+.stat .ico svg{width:18px;height:18px}
+.stat span{display:block;font-size:11.5px;color:var(--mute);font-weight:800;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px}
+.stat b{display:block;font-size:36px;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums;line-height:1;color:var(--accent,var(--text))}
+.stat[data-tone="ok"]{--accent:var(--ok);--accent-bg:rgba(143,217,168,.12)}
+.stat[data-tone="warn"]{--accent:var(--warn);--accent-bg:rgba(232,200,138,.12)}
+.stat[data-tone="bad"]{--accent:#e6e8ec;--accent-bg:rgba(230,232,236,.12)}
+.stat[data-tone="total"]{--accent:var(--blue);--accent-bg:rgba(168,184,208,.12)}
 
-  .ka-hwid-box::after {
-    content:'';
-    position:absolute;
-    top:0; left:0;
-    width:3px;
-    height:100%;
-    background:#ff8c1a;
-  }
+.quick{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
+.quick .lbl{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--dim);text-transform:uppercase;letter-spacing:1.2px;font-weight:800;margin-right:10px}
+.quick button{padding:8px 15px;font-size:12.5px;border-radius:10px;border:1px solid rgba(255,255,255,.10);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015));color:var(--text-2);font-weight:700;cursor:pointer;transition:all .22s}
+.quick button:hover{border-color:#e6e8ec;color:#fff;background:linear-gradient(180deg,rgba(230,232,236,.14),rgba(230,232,236,.04));transform:translateY(-2px)}
 
-  .ka-hwid-header {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:8px;
-  }
+.info-box{padding:24px 20px;color:var(--mute);font-size:13.5px;font-weight:500}
+.info-box p{margin-bottom:14px}
+.info-box b{color:var(--text-2)}
 
-  .ka-hwid-label {
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:1px;
-    color:#7a7a85;
-    font-weight:600;
-  }
+.confirm-modal{position:fixed;inset:0;background:rgba(4,5,8,.75);display:grid;place-items:center;padding:20px;z-index:400;animation:fadeIn .25s ease both;backdrop-filter:blur(14px)}
+.confirm-box{background:linear-gradient(180deg,rgba(30,32,38,.98),rgba(18,19,23,.98));border:1px solid rgba(255,255,255,.10);border-radius:22px;width:100%;max-width:400px;padding:28px;box-shadow:0 60px 140px -30px #000;animation:popIn .35s cubic-bezier(.2,.9,.3,1.15) both;position:relative;overflow:hidden}
+.confirm-box::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#e6e8ec,transparent);background-size:200% 100%;animation:borderFlow 3s linear infinite}
+.confirm-box h2{font-size:18px;font-weight:800;letter-spacing:-.03em;margin-bottom:12px;display:flex;align-items:center;gap:11px;color:#f6f7f9}
+.confirm-box h2 svg{width:22px;height:22px;flex:0 0 auto;color:#e6e8ec}
+.confirm-box p{color:var(--mute);font-size:13.5px;font-weight:500;margin-bottom:22px;line-height:1.65;word-break:break-word}
+.confirm-box p b{color:#e6e8ec;font-family:var(--mono);font-size:12.5px;background:rgba(230,232,236,.10);padding:2px 8px;border-radius:6px;border:1px solid rgba(230,232,236,.15);word-break:break-all}
+.confirm-foot{display:flex;justify-content:flex-end;gap:10px}
 
-  .ka-hwid-badge {
-    font-size:10px;
-    background:#ff8c1a20;
-    color:#ff8c1a;
-    border:1px solid #ff8c1a40;
-    padding:2px 8px;
-    border-radius:20px;
-    font-weight:600;
-    text-transform:uppercase;
-    letter-spacing:0.5px;
-  }
-
-  .ka-hwid-value {
-    font-family:'SF Mono','Fira Code',monospace;
-    font-size:14px;
-    color:#e8e8e8;
-    letter-spacing:0.5px;
-    word-break:break-all;
-  }
-
-  /* ---------- BUTTONS ---------- */
-  .ka-btn {
-    width:100%;
-    padding:13px 20px;
-    border:none;
-    border-radius:10px;
-    font-size:14px;
-    font-weight:600;
-    letter-spacing:0.3px;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    transition:all 0.15s ease;
-    font-family:inherit;
-  }
-
-  .ka-btn-primary {
-    background:linear-gradient(135deg, #ff8c1a, #ff6a00);
-    color:#fff;
-    box-shadow:0 8px 20px -8px rgba(255,140,26,0.6);
-    margin-bottom:10px;
-  }
-
-  .ka-btn-primary:hover {
-    transform:translateY(-1px);
-    box-shadow:0 12px 25px -8px rgba(255,140,26,0.8);
-    background:linear-gradient(135deg, #ffa040, #ff7a10);
-  }
-
-  .ka-btn-primary:active {
-    transform:translateY(1px);
-    box-shadow:0 4px 12px -6px rgba(255,140,26,0.6);
-  }
-
-  .ka-btn-secondary {
-    background:#1c1c22;
-    color:#b8b8c0;
-    border:1px solid #2a2a30;
-  }
-
-  .ka-btn-secondary:hover {
-    background:#22222a;
-    color:#fff;
-    border-color:#ff8c1a40;
-  }
-
-  /* ---------- FOOTER ---------- */
-  .ka-footer {
-    margin-top:20px;
-    text-align:center;
-    font-size:11px;
-    color:#5a5a65;
-    letter-spacing:0.3px;
-  }
-
-  .ka-footer span {
-    color:#ff8c1a;
-    font-weight:600;
-  }
-
-  /* ---------- LOADER ---------- */
-  .ka-spinner {
-    width:16px;
-    height:16px;
-    border:2px solid #ffffff40;
-    border-top-color:#fff;
-    border-radius:50%;
-    animation:spin 0.7s linear infinite;
-    display:none;
-  }
-
-  .ka-btn-primary.loading .ka-spinner {
-    display:block;
-  }
-
-  .ka-btn-primary.loading .ka-btn-icon {
-    display:none;
-  }
-
-  @keyframes spin {
-    to { transform:rotate(360deg); }
-  }
-
-  /* ---------- TOAST ---------- */
-  .ka-toast {
-    position:fixed;
-    bottom:24px;
-    left:50%;
-    transform:translateX(-50%) translateY(100px);
-    background:#1c1c22;
-    color:#fff;
-    padding:12px 20px;
-    border-radius:10px;
-    font-size:13px;
-    font-weight:500;
-    border:1px solid #2a2a30;
-    box-shadow:0 10px 30px -10px rgba(0,0,0,0.9);
-    opacity:0;
-    transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
-    z-index:9999;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    max-width:90%;
-  }
-
-  .ka-toast.show {
-    transform:translateX(-50%) translateY(0);
-    opacity:1;
-  }
-
-  .ka-toast.success {
-    border-color:#22c55e40;
-  }
-
-  .ka-toast.success .ka-toast-dot {
-    background:#22c55e;
-    box-shadow:0 0 8px #22c55e;
-  }
-
-  .ka-toast.error {
-    border-color:#ef444440;
-  }
-
-  .ka-toast.error .ka-toast-dot {
-    background:#ef4444;
-    box-shadow:0 0 8px #ef4444;
-  }
-
-  .ka-toast-dot {
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:#ff8c1a;
-    box-shadow:0 0 8px #ff8c1a;
-    flex-shrink:0;
-  }
-
-  /* ---------- RESPONSIVE ---------- */
-  @media (max-width:520px) {
-    .keyauth-panel { padding:26px 20px; border-radius:12px; }
-    .ka-key-value { font-size:13px; }
-    .ka-hwid-value { font-size:12px; }
-  }
+@media(max-width:960px){
+  #app{grid-template-columns:1fr}
+  aside{position:sticky;top:0;z-index:40;height:auto;width:100%;flex-direction:row;align-items:center;gap:8px;padding:12px 14px;border-right:0;border-bottom:1px solid rgba(255,255,255,.05);overflow-x:auto;scrollbar-width:none}
+  aside::-webkit-scrollbar{display:none}
+  .brand{padding:0 12px 0 0;flex:0 0 auto}
+  .brand::after{display:none}
+  .brand .logo{width:34px;height:34px}
+  .brand .name{display:none}
+  .nav{width:auto;flex:0 0 auto;white-space:nowrap;padding:10px 14px;font-size:13px;gap:9px;border-radius:10px}
+  .nav.on::after{display:none}
+  .nav.on{background:rgba(230,232,236,.15);box-shadow:0 0 0 1px rgba(230,232,236,.30) inset}
+  .bottom{margin:0 0 0 auto;padding:0;border:0;flex:0 0 auto}
+  .bottom .btn{padding:9px 13px;font-size:13px}
+  .bottom .btn .txt{display:none}
+  main{padding:20px 18px calc(60px + var(--safe-b))}
+  h1.t{font-size:26px}
+  .stats{grid-template-columns:repeat(2,1fr);gap:12px}
+  .stat b{font-size:26px}
+  .tb{padding:14px;gap:10px}
+  .search-wrap{min-width:0;width:100%;flex:1 1 100%}
+  .dropdown{width:100%;flex:1 1 100%}
+  .scroll{overflow:visible}
+  table{min-width:0;width:100%;border:0}
+  thead{display:none}
+  table,tbody,tr,td{display:block;width:100%}
+  tbody tr{background:linear-gradient(180deg,rgba(255,255,255,.03),transparent),var(--panel-2);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px 20px;margin-bottom:12px}
+  td{border:0;padding:9px 0;white-space:normal;display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:13.5px}
+  td::before{content:attr(data-l);color:var(--mute);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;flex:0 0 auto}
+  td:empty{display:none}
+  td .row{justify-content:stretch;width:100%;gap:8px}
+  td .row .btn{flex:1;text-align:center;padding:10px 12px;font-size:12.5px;justify-content:center}
+  td:last-child{border-top:1px solid rgba(255,255,255,.06);padding-top:14px;margin-top:8px}
+  .key,.hw{word-break:break-all;white-space:normal;text-align:right}
+  .modal{padding:0;place-items:end center}
+  .box{max-width:100%;width:100%;border-radius:28px 28px 0 0;padding:26px 20px calc(26px + var(--safe-b));max-height:92dvh;overflow-y:auto}
+  .box::before{display:none}
+  .two{grid-template-columns:1fr}
+  .foot .btn{flex:1;padding:14px 16px}
+  .fld input{padding:14px 15px;font-size:16px}
+  .confirm-modal{padding:0;place-items:end center}
+  .confirm-box{max-width:100%;width:100%;border-radius:28px 28px 0 0;padding:26px 20px calc(26px + var(--safe-b))}
+  .confirm-box::before{display:none}
+  .confirm-foot{flex-direction:column-reverse;gap:10px}
+  .confirm-foot .btn{width:100%;padding:14px 16px}
+  #toasts{left:14px;right:14px;bottom:calc(14px + var(--safe-b))}
+  .toast{min-width:0;width:100%}
+  .lbox{padding:36px 26px}
+  .lbox h1{font-size:24px}
+}
+@media(max-width:420px){
+  .stats{grid-template-columns:1fr 1fr}
+  .stat b{font-size:22px}
+  .acts .btn{padding:11px 12px;font-size:12.5px}
+  .acts .btn .txt{display:none}
+  h1.t{font-size:22px}
+}
+@media(prefers-reduced-motion:reduce){*,::before,::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
-<div class="keyauth-panel">
-
-  <!-- Header -->
-  <div class="ka-header">
-    <div class="ka-logo">🔐</div>
-    <div class="ka-title">KeyAuth Panel</div>
-    <div class="ka-subtitle">License Management System</div>
-  </div>
-
-  <!-- Status -->
-  <div class="ka-status">
-    <div class="ka-status-label">
-      <span class="ka-status-dot"></span>
-      Statut du compte
-    </div>
-    <div class="ka-status-value" id="statusValue">ACTIF</div>
-  </div>
-
-  <!-- Key -->
-  <div class="ka-key-box">
-    <div class="ka-key-label">License Key</div>
-    <div class="ka-key-value" id="keyValue" title="Cliquez pour copier">
-      ORNG-7X9K-2M4P-8Q1Z
-    </div>
-  </div>
-
-  <!-- HWID -->
-  <div class="ka-hwid-box">
-    <div class="ka-hwid-header">
-      <div class="ka-hwid-label">Hardware ID (HWID)</div>
-      <div class="ka-hwid-badge" id="hwidBadge">Lié</div>
-    </div>
-    <div class="ka-hwid-value" id="hwidValue">A1B2-C3D4-E5F6-7890</div>
-  </div>
-
-  <!-- Boutons -->
-  <button class="ka-btn ka-btn-primary" id="resetBtn">
-    <span class="ka-btn-icon">🔄</span>
-    <span class="ka-spinner"></span>
-    <span id="resetBtnText">Reset HWID</span>
-  </button>
-
-  <button class="ka-btn ka-btn-secondary" id="copyBtn">
-    📋 Copier la clé
-  </button>
-
-  <!-- Footer -->
-  <div class="ka-footer">
-    Propulsé par <span>KeyAuth</span> · v1.0
-  </div>
-
+<div id="login">
+  <form class="lbox" id="loginForm" autocomplete="off">
+    <div class="logo-wrap"><span class="fallback">R</span></div>
+    <h1>Raxo Panel</h1>
+    <p>Connecte-toi pour gérer tes licences.</p>
+    <input type="password" id="adminKey" placeholder="Clé d'administration" autocomplete="off" spellcheck="false">
+    <button class="btn red" type="submit" style="width:100%;padding:16px 18px;font-size:15px" id="loginBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+      Se connecter
+    </button>
+    <div class="err" id="loginErr" hidden></div>
+    <p style="margin-top:18px;font-size:12px;color:var(--dim);text-align:center">Clé démo : <b style="color:#e6e8ec;font-family:var(--mono)">raxo2024</b></p>
+  </form>
 </div>
 
-<!-- Toast -->
-<div class="ka-toast" id="toast">
-  <span class="ka-toast-dot"></span>
-  <span id="toastText">Message</span>
+<div id="app" hidden>
+  <aside>
+    <div class="brand">
+      <div class="logo"><span class="fallback">R</span></div>
+      <div class="name"><b>Raxo</b><small>Admin Panel</small></div>
+    </div>
+    <button class="nav on" data-view="keys">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Licences <small id="nKeys">0</small>
+    </button>
+    <button class="nav" data-view="hwid">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+      Blacklist <small id="nHwid">0</small>
+    </button>
+    <button class="nav" data-view="reset">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      Reset HWID <small id="nReset">0</small>
+    </button>
+    <div class="bottom">
+      <button class="btn ghost" id="logout" style="width:100%">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        <span class="txt">Déconnexion</span>
+      </button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="top">
+      <div class="page-head">
+        <h1 class="t" id="title">Licences</h1>
+        <span class="t-sub" id="subtitle">Gère les clés d'accès de ton application</span>
+      </div>
+      <div class="acts">
+        <button class="btn ghost" id="refresh">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/></svg>
+          <span class="txt">Rafraîchir</span>
+        </button>
+        <button class="btn red" id="newKey">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span class="txt">Nouvelle clé</span>
+        </button>
+      </div>
+    </div>
+
+    <section class="view on" id="v-keys">
+      <div class="stats" id="stats"></div>
+      <div class="card">
+        <div class="quick">
+          <span class="lbl">⚡ Génération rapide</span>
+          <button type="button" data-quick="1">1 jour</button>
+          <button type="button" data-quick="3">3 jours</button>
+          <button type="button" data-quick="7">7 jours</button>
+          <button type="button" data-quick="30">30 jours</button>
+          <button type="button" data-quick="90">90 jours</button>
+          <button type="button" data-quick="365">1 an</button>
+        </div>
+        <div class="tb">
+          <div class="search-wrap">
+            <input id="q" type="search" placeholder="Rechercher une clé ou un HWID…" spellcheck="false">
+          </div>
+          <div class="dropdown" id="ddStatus">
+            <button type="button" class="dropdown-trigger" data-dropdown-trigger>
+              <span data-dropdown-label>Tous les statuts</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="dropdown-menu" data-dropdown-menu hidden>
+              <div class="dropdown-item active" data-value=""><span>Tous les statuts</span><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="dropdown-item" data-value="active"><span>Actives</span><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="dropdown-item" data-value="expired"><span>Expirées</span><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="dropdown-item" data-value="banned"><span>Bannies</span><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            </div>
+          </div>
+        </div>
+        <div class="scroll"><table>
+          <thead><tr><th>Clé</th><th>Statut</th><th>Durée</th><th>HWID</th><th>Expire le</th><th>Restant</th><th></th></tr></thead>
+          <tbody id="keysBody"></tbody>
+        </table></div>
+        <div class="empty" id="keysEmpty">Aucune clé.</div>
+      </div>
+    </section>
+
+    <section class="view" id="v-hwid">
+      <div class="card">
+        <div class="tb">
+          <div class="search-wrap">
+            <input id="newHwid" type="text" placeholder="HWID à blacklister" autocomplete="off" spellcheck="false" autocapitalize="characters">
+          </div>
+          <button class="btn red" id="banHwid">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            Blacklister
+          </button>
+        </div>
+        <div class="scroll"><table>
+          <thead><tr><th>HWID blacklisté</th><th>Ajouté le</th><th>Raison</th><th></th></tr></thead>
+          <tbody id="hwidBody"></tbody>
+        </table></div>
+        <div class="empty" id="hwidEmpty">Aucun HWID blacklisté.</div>
+      </div>
+    </section>
+
+    <section class="view" id="v-reset">
+      <div class="card">
+        <div class="tb">
+          <div class="search-wrap">
+            <input id="resetLicense" type="text" placeholder="Entre la licence de l'utilisateur…" autocomplete="off" spellcheck="false" style="font-family:var(--mono)">
+          </div>
+          <button class="btn red" id="doReset">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Réinitialiser le HWID
+          </button>
+        </div>
+        <div class="info-box">
+          <p>🔹 <b>Fonctionnement :</b> entre la clé de licence d'un utilisateur pour libérer son HWID. Cela lui permettra de se reconnecter depuis un autre PC.</p>
+          <p>🔹 <b>Historique :</b> chaque reset est enregistré ci-dessous et visible dans les logs.</p>
+        </div>
+        <div class="scroll" style="border-top:1px solid rgba(255,255,255,.05)">
+          <table>
+            <thead><tr><th>Licence</th><th>HWID libéré</th><th>Date</th></tr></thead>
+            <tbody id="resetBody"></tbody>
+          </table>
+        </div>
+        <div class="empty" id="resetEmpty">Aucun reset effectué.</div>
+      </div>
+    </section>
+  </main>
 </div>
+
+<div id="toasts"></div>
 
 <script>
-(function() {
-  // ---------- ÉLÉMENTS ----------
-  const keyValue = document.getElementById('keyValue');
-  const hwidValue = document.getElementById('hwidValue');
-  const hwidBadge = document.getElementById('hwidBadge');
-  const resetBtn = document.getElementById('resetBtn');
-  const resetBtnText = document.getElementById('resetBtnText');
-  const copyBtn = document.getElementById('copyBtn');
-  const toast = document.getElementById('toast');
-  const toastText = document.getElementById('toastText');
-  const statusValue = document.getElementById('statusValue');
+"use strict";
 
-  // ---------- UTILITAIRES ----------
-  function generateHWID() {
-    const chars = 'ABCDEF0123456789';
-    const seg = () => Array.from({length:4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
-    return [seg(), seg(), seg(), seg()].join('-');
+const ADMIN_KEY = "raxo2024";
+let allKeys = [];
+let blacklist = [];
+let resetHistory = [];
+
+function saveData(){
+  localStorage.setItem('raxo_keys', JSON.stringify(allKeys));
+  localStorage.setItem('raxo_blacklist', JSON.stringify(blacklist));
+  localStorage.setItem('raxo_reset', JSON.stringify(resetHistory));
+}
+function loadData(){
+  try { allKeys = JSON.parse(localStorage.getItem('raxo_keys')) || []; } catch { allKeys = []; }
+  try { blacklist = JSON.parse(localStorage.getItem('raxo_blacklist')) || []; } catch { blacklist = []; }
+  try { resetHistory = JSON.parse(localStorage.getItem('raxo_reset')) || []; } catch { resetHistory = []; }
+}
+loadData();
+
+function genKey(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let k = '';
+  for (let i = 0; i < 24; i++){
+    if (i > 0 && i % 6 === 0) k += '-';
+    k += chars[Math.floor(Math.random() * chars.length)];
   }
+  return k;
+}
 
-  function generateKey() {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789';
-    const seg = () => Array.from({length:4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
-    return [seg(), seg(), seg(), seg()].join('-');
-  }
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDate = ts => new Date(ts).toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+const fmtLeft = ms => {
+  if (ms <= 0) return '0m';
+  const d = Math.floor(ms / 864e5), h = Math.floor((ms % 864e5) / 36e5), m = Math.floor((ms % 36e5) / 6e4);
+  return d ? `${d}j ${h}h` : h ? `${h}h ${m}m` : `${m}m`;
+};
+const status = k => k.banned ? 'banned' : Date.now() > k.expiresAt ? 'expired' : 'active';
+const statusNames = { active: 'Active', expired: 'Expirée', banned: 'Bannie' };
 
-  function showToast(message, type = 'info') {
-    toastText.textContent = message;
-    toast.className = 'ka-toast show ' + type;
-    clearTimeout(toast._timer);
-    toast._timer = setTimeout(() => {
-      toast.classList.remove('show');
-    }, 2800);
-  }
+const TOAST_ICONS = {
+  success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  error:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+};
+function toast(msg, type){
+  const el = document.createElement('div');
+  el.className = 'toast ' + (type === 'success' ? 'success' : 'error');
+  el.innerHTML = (TOAST_ICONS[type] || TOAST_ICONS.error) + '<span>' + esc(msg) + '</span>';
+  $('toasts').appendChild(el);
+  setTimeout(() => el.remove(), 2800);
+}
 
-  function setLoading(state) {
-    if (state) {
-      resetBtn.classList.add('loading');
-      resetBtn.disabled = true;
-      resetBtnText.textContent = 'Réinitialisation...';
-    } else {
-      resetBtn.classList.remove('loading');
-      resetBtn.disabled = false;
-      resetBtnText.textContent = 'Reset HWID';
-    }
-  }
-
-  // ---------- ACTIONS ----------
-  function resetHWID() {
-    setLoading(true);
-    hwidBadge.textContent = 'Reset...';
-    hwidBadge.style.color = '#ffb74d';
-    hwidBadge.style.background = '#ffb74d20';
-    hwidBadge.style.borderColor = '#ffb74d40';
-
-    // simulation d'appel API (comme KeyAuth)
-    setTimeout(() => {
-      const newHWID = generateHWID();
-      const newKey = generateKey();
-
-      hwidValue.textContent = newHWID;
-      keyValue.textContent = newKey;
-
-      hwidBadge.textContent = 'Lié';
-      hwidBadge.style.color = '#ff8c1a';
-      hwidBadge.style.background = '#ff8c1a20';
-      hwidBadge.style.borderColor = '#ff8c1a40';
-
-      statusValue.textContent = 'ACTIF';
-      statusValue.style.color = '#ff8c1a';
-
-      setLoading(false);
-      showToast('HWID réinitialisé avec succès', 'success');
-    }, 1200);
-  }
-
-  function copyKey() {
-    const key = keyValue.textContent.trim();
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(key)
-        .then(() => showToast('Clé copiée : ' + key, 'success'))
-        .catch(() => showToast('Erreur de copie', 'error'));
-    } else {
-      // fallback
-      const ta = document.createElement('textarea');
-      ta.value = key;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      showToast('Clé copiée : ' + key, 'success');
-    }
-  }
-
-  // ---------- ÉVÉNEMENTS ----------
-  resetBtn.addEventListener('click', resetHWID);
-  copyBtn.addEventListener('click', copyKey);
-  keyValue.addEventListener('click', copyKey);
-
-  // double-clic sur la clé = régénérer uniquement la clé
-  keyValue.addEventListener('dblclick', (e) => {
-    e.stopPropagation();
-    const newKey = generateKey();
-    keyValue.textContent = newKey;
-    showToast('Nouvelle clé générée : ' + newKey, 'success');
+function confirmDialog(opts){
+  return new Promise(resolve => {
+    const title = typeof opts === 'string' ? 'Confirmation' : (opts.title || 'Confirmation');
+    const message = typeof opts === 'string' ? opts : (opts.message || '');
+    const okText = (opts && opts.okText) || 'Confirmer';
+    const cancelText = (opts && opts.cancelText) || 'Annuler';
+    const danger = !!(opts && opts.danger);
+    const m = document.createElement('div');
+    m.className = 'confirm-modal';
+    m.innerHTML = `
+      <div class="confirm-box">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${danger ? '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>' : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'}</svg>${esc(title)}</h2>
+        <p>${message}</p>
+        <div class="confirm-foot">
+          <button class="btn ghost" data-cancel type="button">${esc(cancelText)}</button>
+          <button class="btn red" data-ok type="button">${esc(okText)}</button>
+        </div>
+      </div>`;
+    const close = val => { m.remove(); resolve(val); };
+    m.querySelector('[data-ok]').onclick = () => close(true);
+    m.querySelector('[data-cancel]').onclick = () => close(false);
+    m.addEventListener('mousedown', e => { if (e.target === m) close(false); });
+    document.body.appendChild(m);
+    setTimeout(() => m.querySelector('[data-ok]').focus(), 30);
   });
+}
 
-  // ---------- INIT ----------
-  // état initial : compte lié
-  statusValue.textContent = 'ACTIF';
-  statusValue.style.color = '#ff8c1a';
-  hwidBadge.textContent = 'Lié';
-})();
+function initDropdown(el){
+  const trigger = el.querySelector('[data-dropdown-trigger]');
+  const menu = el.querySelector('[data-dropdown-menu]');
+  const label = el.querySelector('[data-dropdown-label]');
+  let value = '';
+  trigger.onclick = e => {
+    e.stopPropagation();
+    document.querySelectorAll('.dropdown.open').forEach(d => { if (d !== el){ d.classList.remove('open'); d.querySelector('[data-dropdown-menu]').hidden = true; } });
+    const isOpen = el.classList.toggle('open');
+    menu.hidden = !isOpen;
+    if (isOpen){ menu.classList.remove('drop-up'); const r = trigger.getBoundingClientRect(); if (window.innerHeight - r.bottom < 300 && r.top > window.innerHeight - r.bottom) menu.classList.add('drop-up'); }
+  };
+  el.querySelectorAll('.dropdown-item').forEach(item => {
+    item.onclick = e => {
+      e.stopPropagation();
+      value = item.dataset.value || '';
+      label.textContent = item.querySelector('span').textContent;
+      el.querySelectorAll('.dropdown-item').forEach(i => i.classList.toggle('active', i === item));
+      el.classList.remove('open'); menu.hidden = true;
+      el.dispatchEvent(new CustomEvent('change', { detail: { value } }));
+    };
+  });
+  el.getValue = () => value;
+}
+document.querySelectorAll('.dropdown').forEach(initDropdown);
+document.addEventListener('click', () => document.querySelectorAll('.dropdown.open').forEach(d => { d.classList.remove('open'); d.querySelector('[data-dropdown-menu]').hidden = true; }));
+
+$('loginForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const v = $('adminKey').value.trim();
+  if (!v) return;
+  if (v === ADMIN_KEY){
+    sessionStorage.setItem('raxo_auth', '1');
+    $('login').hidden = true;
+    $('app').hidden = false;
+    start();
+  } else {
+    $('loginErr').textContent = 'Clé admin invalide.';
+    $('loginErr').hidden = false;
+    $('adminKey').value = '';
+  }
+});
+$('logout').onclick = () => { sessionStorage.removeItem('raxo_auth'); location.reload(); };
+
+const titles = {
+  keys: ['Licences', 'Gère les clés d\'accès de ton application'],
+  hwid: ['Blacklist', 'Liste noire des identifiants matériels'],
+  reset: ['Reset HWID', 'Libère le HWID d\'un utilisateur via sa licence']
+};
+document.querySelectorAll('.nav').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.nav').forEach(n => n.classList.toggle('on', n === b));
+  document.querySelectorAll('.view').forEach(s => s.classList.toggle('on', s.id === 'v-' + b.dataset.view));
+  const [t, s] = titles[b.dataset.view] || ['', ''];
+  $('title').textContent = t; $('subtitle').textContent = s;
+  $('newKey').hidden = b.dataset.view !== 'keys';
+});
+
+const STAT_ICONS = {
+  total: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3"/></svg>',
+  active: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+  expired: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+  banned: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>'
+};
+function renderStats(list){
+  const c = { active: 0, expired: 0, banned: 0 };
+  list.forEach(k => c[status(k)]++);
+  $('stats').innerHTML = [
+    ['Total', list.length, 'total', 'total'],
+    ['Actives', c.active, 'ok', 'active'],
+    ['Expirées', c.expired, 'warn', 'expired'],
+    ['Bannies', c.banned, 'bad', 'banned']
+  ].map(([a, b, tone, ico]) =>
+    `<div class="stat" data-tone="${tone}"><div class="ico">${STAT_ICONS[ico]}</div><span>${a}</span><b>${b}</b></div>`
+  ).join('');
+}
+function renderRows(){
+  const q = $('q').value.trim().toUpperCase();
+  const fs = $('ddStatus').getValue();
+  const rows = (!q && !fs) ? allKeys : allKeys.filter(k =>
+    (!fs || status(k) === fs) && (!q || k.key.includes(q) || (k.hwid || '').includes(q))
+  );
+  $('keysEmpty').hidden = rows.length > 0;
+  $('keysEmpty').textContent = allKeys.length ? 'Aucune clé ne correspond.' : 'Aucune clé. Crée-en une avec « Nouvelle clé ».';
+  const frag = document.createDocumentFragment();
+  rows.forEach(k => {
+    const s = status(k);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td data-l="Clé"><span class="key" data-copy="${esc(k.key)}">${esc(k.key)}</span></td>
+      <td data-l="Statut"><span class="badge ${s}">${statusNames[s]}</span></td>
+      <td data-l="Durée" class="mut">${esc(k.days || '?')} j</td>
+      <td data-l="HWID">${k.hwid ? `<span class="hw">${esc(k.hwid)}</span>` : '<span class="mut"><i>libre</i></span>'}</td>
+      <td data-l="Expire le" class="mut">${fmtDate(k.expiresAt)}</td>
+      <td data-l="Restant" class="mut">${s === 'active' ? fmtLeft(k.expiresAt - Date.now()) : '—'}</td>
+      <td data-l=""><div class="row">
+        <button class="btn ghost sm" data-act="${k.banned ? 'unban' : 'ban'}" data-key="${esc(k.key)}">${k.banned ? 'Débannir' : 'Bannir'}</button>
+        <button class="btn ghost sm danger" data-act="del" data-key="${esc(k.key)}">Suppr.</button>
+      </div></td>`;
+    frag.appendChild(tr);
+  });
+  $('keysBody').replaceChildren(frag);
+  $('nKeys').textContent = allKeys.length;
+}
+function renderKeys(){ saveData(); renderStats(allKeys); renderRows(); }
+
+function renderBlacklist(){
+  $('nHwid').textContent = blacklist.length;
+  $('hwidEmpty').hidden = blacklist.length > 0;
+  const frag = document.createDocumentFragment();
+  blacklist.forEach(b => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td data-l="HWID"><span class="hw" style="color:#e6e8ec">${esc(b.hwid)}</span></td>
+      <td data-l="Ajouté le" class="mut">${fmtDate(b.ts)}</td>
+      <td data-l="Raison" class="mut">${esc(b.reason || '—')}</td>
+      <td data-l=""><button class="btn ghost sm" data-h="${esc(b.hwid)}">Unblacklist</button></td>`;
+    frag.appendChild(tr);
+  });
+  $('hwidBody').replaceChildren(frag);
+}
+
+function renderResetHistory(){
+  $('nReset').textContent = resetHistory.length;
+  $('resetEmpty').hidden = resetHistory.length > 0;
+  const frag = document.createDocumentFragment();
+  resetHistory.slice().reverse().forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td data-l="Licence"><span class="key">${esc(r.license)}</span></td>
+      <td data-l="HWID libéré"><span class="hw">${esc(r.oldHwid || '—')}</span></td>
+      <td data-l="Date" class="mut">${fmtDate(r.ts)}</td>`;
+    frag.appendChild(tr);
+  });
+  $('resetBody').replaceChildren(frag);
+}
+
+$('keysBody').addEventListener('click', async e => {
+  const cp = e.target.closest('[data-copy]');
+  if (cp){
+    try { await navigator.clipboard.writeText(cp.dataset.copy); toast('Clé copiée', 'success'); }
+    catch { toast('Copie impossible', 'error'); }
+    return;
+  }
+  const b = e.target.closest('[data-act]');
+  if (!b) return;
+  const key = b.dataset.key, a = b.dataset.act;
+  if (a === 'ban'){
+    const ok = await confirmDialog({ title:'Bannir cette clé ?', message:`La clé <b>${esc(key)}</b> ne pourra plus être utilisée.`, okText:'Bannir', danger:true });
+    if (!ok) return;
+  }
+  if (a === 'del'){
+    const ok = await confirmDialog({ title:'Supprimer cette clé ?', message:`La clé <b>${esc(key)}</b> sera définitivement supprimée.`, okText:'Supprimer', danger:true });
+    if (!ok) return;
+  }
+  if (a === 'del') allKeys = allKeys.filter(k => k.key !== key);
+  else if (a === 'ban') allKeys = allKeys.map(k => k.key === key ? { ...k, banned: true } : k);
+  else if (a === 'unban') allKeys = allKeys.map(k => k.key === key ? { ...k, banned: false } : k);
+  renderKeys();
+  toast({ ban:'Clé bannie', unban:'Clé réactivée', del:'Clé supprimée' }[a], 'success');
+});
+
+let searchTimer;
+$('q').oninput = () => { clearTimeout(searchTimer); searchTimer = setTimeout(renderRows, 120); };
+$('ddStatus').addEventListener('change', renderRows);
+
+$('refresh').onclick = () => { renderKeys(); renderBlacklist(); renderResetHistory(); toast('Actualisé', 'success'); };
+
+function openNewKeyModal(days){
+  const preselect = days || 30;
+  const m = document.createElement('div');
+  m.className = 'modal';
+  m.innerHTML = `<div class="box">
+    <div class="modal-header">
+      <div class="modal-logo"><span class="fallback">R</span></div>
+      <div class="modal-title"><b>Raxo</b><span>Créer une nouvelle clé</span></div>
+    </div>
+    <div class="two">
+      <div class="fld">
+        <label>Durée (jours)</label>
+        <input id="nDays" type="number" min="1" max="9999" value="${preselect}">
+      </div>
+      <div class="fld"><label>Quantité</label><input id="nq" type="number" min="1" max="100" value="1"></div>
+    </div>
+    <div class="fld"><label for="nh">HWID (facultatif)</label><input id="nh" placeholder="Laisser vide pour une clé libre" spellcheck="false"></div>
+    <div class="foot">
+      <button class="btn ghost" data-cancel type="button">Annuler</button>
+      <button class="btn red" data-ok type="button">Créer</button>
+    </div>
+  </div>`;
+  const close = () => m.remove();
+  m.querySelector('[data-cancel]').onclick = close;
+  m.addEventListener('mousedown', e => { if (e.target === m) close(); });
+  document.body.appendChild(m);
+  m.querySelector('#nq').focus();
+
+  m.querySelector('[data-ok]').onclick = () => {
+    const daysVal = Math.max(1, parseInt(m.querySelector('#nDays').value, 10) || 30);
+    const quantity = Math.max(1, Math.min(100, parseInt(m.querySelector('#nq').value, 10) || 1));
+    const hwid = m.querySelector('#nh').value.trim().toUpperCase() || null;
+    const now = Date.now();
+    const made = [];
+    for (let i = 0; i < quantity; i++){
+      const k = genKey();
+      made.push(k);
+      allKeys.unshift({
+        key: k,
+        days: daysVal,
+        hwid: hwid,
+        expiresAt: now + daysVal * 864e5,
+        banned: false,
+        createdAt: now
+      });
+    }
+    renderKeys();
+    close();
+    toast(made.length + ' clé(s) ' + daysVal + 'j créée(s)', 'success');
+
+    const r = document.createElement('div');
+    r.className = 'modal';
+    r.innerHTML = `<div class="box">
+      <div class="modal-header">
+        <div class="modal-logo"><span class="fallback">R</span></div>
+        <div class="modal-title"><b>Raxo</b><span>Clés générées</span></div>
+      </div>
+      <div class="out"></div>
+      <div class="foot">
+        <button class="btn ghost" data-close type="button">Fermer</button>
+        <button class="btn red" data-copy type="button">Copier tout</button>
+      </div>
+    </div>`;
+    r.querySelector('.out').textContent = made.join('\n');
+    r.querySelector('[data-close]').onclick = () => r.remove();
+    r.querySelector('[data-copy]').onclick = async () => {
+      try { await navigator.clipboard.writeText(made.join('\n')); toast('Copié', 'success'); }
+      catch { toast('Copie impossible', 'error'); }
+    };
+    r.addEventListener('mousedown', e => { if (e.target === r) r.remove(); });
+    document.body.appendChild(r);
+  };
+}
+
+document.querySelectorAll('[data-quick]').forEach(btn => {
+  btn.onclick = () => openNewKeyModal(parseInt(btn.dataset.quick, 10));
+});
+$('newKey').onclick = () => openNewKeyModal(30);
+
+$('hwidBody').addEventListener('click', async e => {
+  const b = e.target.closest('[data-h]');
+  if (!b) return;
+  const hwid = b.dataset.h;
+  const ok = await confirmDialog({ title:'Retirer ce HWID ?', message:`Le HWID <b>${esc(hwid)}</b> pourra à nouveau être utilisé.`, okText:'Retirer', danger:true });
+  if (!ok) return;
+  blacklist = blacklist.filter(x => x.hwid !== hwid);
+  saveData();
+  renderBlacklist();
+  toast('HWID retiré', 'success');
+});
+
+$('banHwid').onclick = async () => {
+  const v = $('newHwid').value.trim().toUpperCase();
+  if (!v) return toast('Entre un HWID', 'error');
+  if (blacklist.some(b => b.hwid === v)) return toast('Déjà blacklisté', 'error');
+  blacklist.unshift({ hwid: v, ts: Date.now(), reason: 'Blacklist manuelle' });
+  $('newHwid').value = '';
+  saveData();
+  renderBlacklist();
+  toast('HWID blacklisté', 'success');
+};
+$('newHwid').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); $('banHwid').click(); } });
+
+$('doReset').onclick = async () => {
+  const v = $('resetLicense').value.trim().toUpperCase();
+  if (!v) return toast('Entre une licence', 'error');
+  const k = allKeys.find(x => x.key === v);
+  if (!k) return toast('Licence introuvable', 'error');
+  if (!k.hwid) return toast('Aucun HWID lié à cette clé', 'error');
+  const ok = await confirmDialog({
+    title:'Réinitialiser le HWID ?',
+    message:`La clé <b>${esc(v)}</b> sera libérée de son HWID. L'utilisateur pourra se reconnecter depuis un autre PC.`,
+    okText:'Réinitialiser'
+  });
+  if (!ok) return;
+  const oldHwid = k.hwid;
+  k.hwid = null;
+  resetHistory.push({ license: v, oldHwid, ts: Date.now() });
+  $('resetLicense').value = '';
+  saveData();
+  renderKeys();
+  renderResetHistory();
+  toast('HWID réinitialisé', 'success');
+};
+$('resetLicense').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); $('doReset').click(); } });
+
+function start(){
+  renderKeys();
+  renderBlacklist();
+  renderResetHistory();
+}
+
+if (sessionStorage.getItem('raxo_auth') === '1'){
+  $('login').hidden = true;
+  $('app').hidden = false;
+  start();
+}
 </script>
-
 </body>
 </html>
