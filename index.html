@@ -1,11 +1,465 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Mon site gratuit</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Key · Reset HWID</title>
+    <style>
+        /* ---------- RESET & BASE ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #1a1a1a 0%, #2a1f14 100%);
+            padding: 1.5rem;
+        }
+
+        /* ---------- PANEL PRINCIPAL (ORANGE) ---------- */
+        .panel {
+            background: #ff8c1a;  /* orange vif */
+            background: linear-gradient(145deg, #ff9f2e, #f57c00);
+            padding: 2.5rem 2rem 2.2rem;
+            border-radius: 3.5rem 1.5rem 3.5rem 1.5rem;
+            box-shadow: 
+                0 25px 40px -10px rgba(0, 0, 0, 0.7),
+                0 0 0 2px rgba(255, 215, 120, 0.5),
+                inset 0 -5px 15px rgba(0, 0, 0, 0.25),
+                inset 0 5px 15px rgba(255, 255, 200, 0.5);
+            max-width: 580px;
+            width: 100%;
+            transition: all 0.2s;
+            border: 1px solid #ffcc80;
+        }
+
+        /* en-tête */
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .panel-header h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #1e1208;
+            text-shadow: 2px 2px 0 rgba(255, 200, 120, 0.8), 0 1px 0 #fff3e0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .panel-header h2 span {
+            background: #1e1208;
+            color: #ffb74d;
+            font-size: 1.2rem;
+            padding: 0.2rem 0.9rem;
+            border-radius: 100px;
+            letter-spacing: 0.5px;
+            text-shadow: none;
+            font-weight: 600;
+            box-shadow: inset 0 -2px 0 #00000055, 0 2px 5px #00000030;
+        }
+
+        /* la clé (key) */
+        .key-box {
+            background: #1e1208;
+            padding: 1.1rem 1.8rem;
+            border-radius: 100px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            box-shadow: 
+                inset 0 0 0 1px #ffb74d,
+                0 10px 20px -8px black,
+                0 0 0 3px #ff8c1a80;
+            border: 1px solid #ffa726;
+        }
+
+        .key-label {
+            color: #ffb74d;
+            font-weight: 600;
+            letter-spacing: 1px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .key-label i {
+            font-size: 1.4rem;
+            font-style: normal;
+            filter: drop-shadow(0 0 5px #ffb74d);
+        }
+
+        .key-value {
+            background: #0b0804;
+            color: #ffd966;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 0.5rem 1.4rem;
+            border-radius: 60px;
+            letter-spacing: 1.5px;
+            border: 1px solid #ffb74d;
+            box-shadow: inset 0 0 15px #ff8c1a30, 0 5px 0 #0a0600;
+            word-break: break-all;
+            text-align: center;
+            transition: 0.2s;
+            cursor: pointer;
+            user-select: all;
+        }
+
+        .key-value:hover {
+            background: #1d140c;
+            box-shadow: inset 0 0 20px #ffb74d60, 0 5px 0 #0a0600;
+            color: #ffebc2;
+        }
+
+        /* ---------- INFO HWID ---------- */
+        .hwid-section {
+            background: #c95f00;
+            background: linear-gradient(135deg, #b35200, #d46b00);
+            border-radius: 2rem 2rem 2rem 2rem;
+            padding: 1.6rem 1.8rem;
+            margin-bottom: 2.2rem;
+            box-shadow: 
+                inset 0 0 0 1px #ffb86b,
+                0 12px 18px -12px black,
+                inset 0 -4px 8px #5e2c00,
+                inset 0 4px 8px #ffb86b90;
+            border-bottom: 2px solid #ffb86b;
+        }
+
+        .hwid-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #1e1208;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.9rem;
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 0 #ffbb77;
+        }
+
+        .hwid-header i {
+            font-style: normal;
+            background: #1e1208;
+            color: #ffb74d;
+            border-radius: 100px;
+            padding: 0.1rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .hwid-value {
+            background: #1a0f06;
+            padding: 1rem 1.4rem;
+            border-radius: 2rem;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 1.1rem;
+            color: #ffcf9a;
+            border: 1px solid #ffb055;
+            box-shadow: inset 0 0 18px #00000080, 0 2px 0 #ffb86b;
+            word-break: break-all;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .hwid-badge {
+            background: #ffb74d;
+            color: #1e1208;
+            font-weight: 700;
+            padding: 0.25rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            box-shadow: inset 0 -2px 0 #b35200, 0 2px 0 #1e1208;
+        }
+
+        /* ---------- BOUTON RESET HWID (ORANGE FONCÉ) ---------- */
+        .reset-btn {
+            background: #d45d00;
+            background: linear-gradient(145deg, #e06b00, #b34f00);
+            border: none;
+            width: 100%;
+            padding: 1.4rem 2rem;
+            border-radius: 100px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: #1e1208;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            cursor: pointer;
+            box-shadow: 
+                0 15px 20px -10px black,
+                0 0 0 2px #ffb74d,
+                inset 0 -8px 0 #7a3600,
+                inset 0 8px 12px #ffd58c;
+            transition: all 0.1s ease;
+            border-bottom: 2px solid #ffd966;
+            font-family: inherit;
+            text-shadow: 0 1px 0 #ffbb77;
+        }
+
+        .reset-btn:hover {
+            background: #e06b00;
+            background: linear-gradient(145deg, #f07c0a, #c25a00);
+            box-shadow: 
+                0 18px 25px -10px black,
+                0 0 0 3px #ffd966,
+                inset 0 -6px 0 #7a3600,
+                inset 0 10px 15px #ffecb3;
+            transform: scale(1.01);
+        }
+
+        .reset-btn:active {
+            transform: translateY(5px);
+            box-shadow: 
+                0 8px 15px -8px black,
+                0 0 0 2px #ffb74d,
+                inset 0 -3px 0 #7a3600,
+                inset 0 5px 15px #ffb74d;
+            transition: 0.05s;
+        }
+
+        .reset-btn i {
+            font-style: normal;
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 0 #633000);
+        }
+
+        /* message de feedback */
+        .feedback {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            color: #1e1208;
+            background: #ffb86bcc;
+            padding: 0.8rem;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+            font-size: 1rem;
+            border: 1px solid #ffd966;
+            box-shadow: inset 0 0 8px #fff3e0;
+            min-height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            word-break: break-word;
+        }
+
+        /* toast / petit effet */
+        .toast-message {
+            transition: all 0.2s ease;
+        }
+
+        /* responsive */
+        @media (max-width: 480px) {
+            .panel {
+                padding: 1.8rem 1.2rem 1.8rem;
+                border-radius: 2rem 1rem 2rem 1rem;
+            }
+            .panel-header h2 {
+                font-size: 1.6rem;
+            }
+            .key-value {
+                font-size: 1.1rem;
+                padding: 0.4rem 0.8rem;
+            }
+            .reset-btn {
+                font-size: 1.2rem;
+                padding: 1.1rem 1rem;
+            }
+            .hwid-value {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>🎉 Mon site est en ligne 24h/24 !</h1>
-  <p>Hébergé gratuitement sur Cloudflare Pages.</p>
+    <div class="panel">
+        <!-- En-tête -->
+        <div class="panel-header">
+            <h2>
+                🔑 PANEL KEY
+                <span>ORANGE</span>
+            </h2>
+        </div>
+
+        <!-- Affichage de la clé -->
+        <div class="key-box">
+            <div class="key-label"><i>🗝️</i> KEY</div>
+            <div class="key-value" id="keyDisplay" title="Cliquez pour copier">ORANGE-7X9K-2M4P-8Q1Z</div>
+        </div>
+
+        <!-- Section HWID -->
+        <div class="hwid-section">
+            <div class="hwid-header">
+                <span>💻 HWID actuel</span>
+                <i>identifiant unique</i>
+            </div>
+            <div class="hwid-value" id="hwidDisplay">
+                <span id="hwidText">A1B2-C3D4-E5F6-7890</span>
+                <span class="hwid-badge">verrouillé</span>
+            </div>
+        </div>
+
+        <!-- Bouton RESET HWID -->
+        <button class="reset-btn" id="resetHwidBtn">
+            <i>🔄</i> RESET HWID
+        </button>
+
+        <!-- Feedback -->
+        <div class="feedback" id="feedbackMessage">
+            Prêt à réinitialiser
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ----- ÉLÉMENTS DOM -----
+            const keyDisplay = document.getElementById('keyDisplay');
+            const hwidText = document.getElementById('hwidText');
+            const resetBtn = document.getElementById('resetHwidBtn');
+            const feedback = document.getElementById('feedbackMessage');
+
+            // ----- GÉNÉRATION DE HWID ALÉATOIRE (format 4x4) -----
+            function generateRandomHWID() {
+                const chars = 'ABCDEF0123456789';
+                const segments = [];
+                for (let s = 0; s < 4; s++) {
+                    let segment = '';
+                    for (let i = 0; i < 4; i++) {
+                        segment += chars.charAt(Math.floor(Math.random() * chars.length));
+                    }
+                    segments.push(segment);
+                }
+                return segments.join('-');
+            }
+
+            // ----- GÉNÉRATION D'UNE NOUVELLE CLÉ (pour le fun, on garde le style orange) -----
+            function generateRandomKey() {
+                const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+                const digits = '0123456789';
+                const allChars = letters + digits;
+                const parts = [];
+                // Format: XXXX-XXXX-XXXX-XXXX (4 blocs de 4)
+                for (let b = 0; b < 4; b++) {
+                    let part = '';
+                    for (let i = 0; i < 4; i++) {
+                        part += allChars.charAt(Math.floor(Math.random() * allChars.length));
+                    }
+                    parts.push(part);
+                }
+                return parts.join('-');
+            }
+
+            // ----- INITIALISATION (première visite) -----
+            function initializeHWID() {
+                // on force un HWID existant (simulé)
+                const initialHWID = 'A1B2-C3D4-E5F6-7890';
+                hwidText.textContent = initialHWID;
+            }
+
+            // ----- MISE À JOUR DU HWID (avec animation de feedback) -----
+            function resetHWID() {
+                // Génère un nouvel identifiant
+                const newHWID = generateRandomHWID();
+                hwidText.textContent = newHWID;
+
+                // Change aussi la clé ? optionnel : on régénère la clé pour un effet "reset" complet
+                // (facultatif, mais amusant)
+                const newKey = generateRandomKey();
+                keyDisplay.textContent = newKey;
+
+                // Message de confirmation
+                feedback.textContent = `✅ HWID réinitialisé → ${newHWID}`;
+                feedback.style.background = '#b3ffb3cc';
+                feedback.style.color = '#0a2e0a';
+                feedback.style.borderColor = '#7acc7a';
+                feedback.style.fontWeight = '700';
+
+                // Reset du style après 3 secondes
+                setTimeout(() => {
+                    feedback.textContent = 'Prêt à réinitialiser';
+                    feedback.style.background = '#ffb86bcc';
+                    feedback.style.color = '#1e1208';
+                    feedback.style.borderColor = '#ffd966';
+                }, 3000);
+            }
+
+            // ----- COPIE DE LA CLÉ (clic) -----
+            function copyKeyToClipboard() {
+                const key = keyDisplay.textContent.trim();
+                navigator.clipboard.writeText(key).then(() => {
+                    feedback.textContent = `📋 Clé copiée : ${key}`;
+                    feedback.style.background = '#ffd966cc';
+                    feedback.style.color = '#1e1208';
+                    feedback.style.borderColor = '#ffb74d';
+                    setTimeout(() => {
+                        feedback.textContent = 'Prêt à réinitialiser';
+                        feedback.style.background = '#ffb86bcc';
+                        feedback.style.borderColor = '#ffd966';
+                    }, 2000);
+                }).catch(() => {
+                    // Fallback
+                    alert('Clé : ' + key);
+                });
+            }
+
+            // ----- ÉCOUTEURS D'ÉVÉNEMENTS -----
+            resetBtn.addEventListener('click', resetHWID);
+
+            keyDisplay.addEventListener('click', copyKeyToClipboard);
+
+            // (Optionnel) double-clic pour regénérer la clé seulement (bonus)
+            keyDisplay.addEventListener('dblclick', function(e) {
+                e.stopPropagation();
+                const newKey = generateRandomKey();
+                keyDisplay.textContent = newKey;
+                feedback.textContent = `🔑 Nouvelle clé générée : ${newKey}`;
+                feedback.style.background = '#ffe0b3cc';
+                setTimeout(() => {
+                    feedback.textContent = 'Prêt à réinitialiser';
+                    feedback.style.background = '#ffb86bcc';
+                }, 2000);
+            });
+
+            // Initialisation : HWID de départ
+            initializeHWID();
+
+            // petite touche : s'assurer que la clé affichée est cohérente
+            // (on garde la clé initiale du HTML, mais on peut la régénérer)
+            // Pour que ce soit propre, on garde celle du HTML.
+            // Mais on peut aussi la générer au chargement (optionnel)
+            // Décommenter la ligne suivante pour une clé aléatoire au chargement :
+            // keyDisplay.textContent = generateRandomKey();
+        })();
+    </script>
 </body>
 </html>
