@@ -2,277 +2,336 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0a0505">
-<title>Raxo — Panel Admin</title>
+<title>Raxo — Auth System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a0505; --panel:rgba(30,16,10,.88); --panel-2:rgba(38,20,12,.88);
-  --side:rgba(28,14,8,.82); --text:#fff8f2; --text-2:#e8d5c4;
-  --mute:#a88a72; --dim:#5a4030;
-  --orange:#ff7a1a; --orange-2:#ffa64d; --orange-3:#e56a0a;
+  --bg:#0a0505;
+  --bg-2:#100808;
+  --side:#0d0606;
+  --side-2:#140a08;
+  --panel:#15100d;
+  --panel-2:#1a120e;
+  --border:rgba(255,122,26,.10);
+  --border-2:rgba(255,122,26,.18);
+  --border-3:rgba(255,122,26,.30);
+  --text:#fff8f2;
+  --text-2:#e8d5c4;
+  --mute:#a88a72;
+  --dim:#5a4030;
+  --orange:#ff7a1a;
+  --orange-2:#ffa64d;
+  --orange-3:#e56a0a;
   --orange-glow:rgba(255,122,26,.45);
-  --ok:#8fd9a8; --warn:#e8c88a;
+  --ok:#4ade80;
+  --warn:#fbbf24;
+  --bad:#ef4444;
+  --blue:#60a5fa;
+  --purple:#a78bfa;
   --sans:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--text);font:14px/1.6 var(--sans);font-weight:500;min-height:100vh;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:
-  radial-gradient(1200px 600px at 15% -10%,rgba(255,122,26,.10),transparent 55%),
-  radial-gradient(900px 500px at 90% 110%,rgba(255,122,26,.06),transparent 55%)}
-button,input{font:inherit;color:inherit}
-input{font-weight:600}
+html,body{overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font:13.5px/1.6 var(--sans);font-weight:500;min-height:100vh;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+button,input,select,textarea{font:inherit;color:inherit;font-weight:500}
+input,select,textarea{font-weight:600}
 [hidden]{display:none!important}
 ::selection{background:var(--orange-glow);color:#fff}
-::-webkit-scrollbar{width:12px;height:12px}
+::-webkit-scrollbar{width:10px;height:10px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(255,122,26,.40),rgba(255,122,26,.15));border-radius:12px;border:3px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(255,122,26,.35),rgba(255,122,26,.15));border-radius:10px;border:2px solid transparent;background-clip:padding-box}
 
-@keyframes riseIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes fadeIn{from{opacity:0}}
-@keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+@keyframes riseIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
 @keyframes slideLeft{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-@keyframes slideRight{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.85)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 @keyframes glow{0%,100%{filter:drop-shadow(0 0 20px rgba(255,122,26,.55))}50%{filter:drop-shadow(0 0 40px rgba(255,122,26,.95))}}
 @keyframes flow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
-#login{position:fixed;inset:0;display:grid;place-items:center;padding:20px;z-index:100;background:
-  radial-gradient(1000px 700px at 50% -10%,rgba(255,122,26,.18),transparent 60%),
-  radial-gradient(900px 600px at 85% 110%,rgba(255,122,26,.10),transparent 60%),var(--bg)}
-.lbox{position:relative;z-index:2;width:100%;max-width:440px;
-  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01)),
+/* ═══ LOGIN ═══ */
+#login{position:fixed;inset:0;display:grid;place-items:center;padding:20px;z-index:100;
+  background:radial-gradient(1000px 700px at 50% -10%,rgba(255,122,26,.15),transparent 60%),
+  radial-gradient(900px 600px at 85% 110%,rgba(255,122,26,.08),transparent 60%),var(--bg)}
+.lbox{position:relative;width:100%;max-width:420px;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01)),
   linear-gradient(180deg,rgba(30,16,10,.96),rgba(20,10,5,.94));
-  backdrop-filter:blur(30px);border:1px solid rgba(255,122,26,.25);border-radius:28px;
-  padding:44px 36px;box-shadow:0 60px 140px -40px rgba(0,0,0,1),0 0 80px -20px rgba(255,122,26,.30);
-  animation:riseIn .9s cubic-bezier(.16,1,.3,1) both;overflow:hidden}
+  backdrop-filter:blur(30px);border:1px solid var(--border-2);border-radius:20px;
+  padding:40px 32px;box-shadow:0 60px 140px -40px rgba(0,0,0,1),0 0 80px -20px rgba(255,122,26,.25);
+  animation:riseIn .8s cubic-bezier(.16,1,.3,1) both;overflow:hidden}
 .lbox::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,transparent,var(--orange),#fff,var(--orange-2),transparent);
   background-size:200% 100%;animation:flow 4s linear infinite}
-.logo-wrap{width:80px;height:80px;border-radius:20px;
-  background:linear-gradient(135deg,rgba(255,122,26,.14),rgba(255,255,255,.03));
-  border:1px solid rgba(255,122,26,.35);display:grid;place-items:center;margin:0 auto 24px;
+.logo-wrap{width:72px;height:72px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(255,122,26,.14),rgba(255,255,255,.02));
+  border:1px solid var(--border-3);display:grid;place-items:center;margin:0 auto 22px;
   box-shadow:0 15px 40px -10px var(--orange-glow);
-  animation:float 4s ease-in-out infinite,glow 3s ease-in-out infinite;
-  overflow:hidden;padding:12px}
+  animation:float 4s ease-in-out infinite,glow 3s ease-in-out infinite;overflow:hidden;padding:12px}
 .logo-wrap img{width:100%;height:100%;object-fit:contain}
-.logo-wrap .fallback{font-size:38px;font-weight:900;color:var(--orange)}
-.lbox h1{font-size:28px;font-weight:800;letter-spacing:-.035em;margin-bottom:8px;text-align:center;
+.logo-wrap .fallback{font-size:36px;font-weight:900;color:var(--orange)}
+.lbox h1{font-size:26px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px;text-align:center;
   background:linear-gradient(180deg,#fff,var(--orange-2));-webkit-background-clip:text;background-clip:text;color:transparent}
-.lbox p{color:var(--mute);margin-bottom:32px;font-size:14px;text-align:center}
-.lbox input{width:100%;padding:16px 18px;background:rgba(0,0,0,.5);border:1px solid rgba(255,122,26,.20);
-  border-radius:14px;margin-bottom:16px;outline:none;transition:all .25s;font-size:15px;font-weight:600;color:#fff}
-.lbox input::placeholder{color:rgba(232,213,196,.4)}
-.lbox input:focus{border-color:var(--orange);box-shadow:0 0 0 4px var(--orange-glow)}
-.err{color:var(--orange-2);font-size:13px;margin-top:16px;padding:14px 16px;background:rgba(255,122,26,.10);
-  border-radius:12px;border-left:3px solid var(--orange);font-weight:600;animation:slideRight .35s ease both}
+.lbox p{color:var(--mute);margin-bottom:28px;font-size:13px;text-align:center}
+.lbox input{width:100%;padding:14px 16px;background:rgba(0,0,0,.5);border:1px solid var(--border-2);
+  border-radius:10px;margin-bottom:14px;outline:none;transition:all .25s;font-size:14px;font-weight:600;color:#fff}
+.lbox input::placeholder{color:rgba(232,213,196,.35)}
+.lbox input:focus{border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-glow)}
+.err{color:var(--orange-2);font-size:12.5px;margin-top:14px;padding:12px 14px;background:rgba(255,122,26,.10);
+  border-radius:10px;border-left:3px solid var(--orange);font-weight:600;animation:slideLeft .3s ease both}
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;border-radius:12px;
-  border:1px solid rgba(255,122,26,.20);background:linear-gradient(180deg,rgba(255,122,26,.10),rgba(255,122,26,.02));
-  font-weight:700;font-size:13.5px;cursor:pointer;transition:all .22s;white-space:nowrap;color:var(--text-2)}
-.btn:hover{border-color:rgba(255,122,26,.45);background:linear-gradient(180deg,rgba(255,122,26,.18),rgba(255,122,26,.05));transform:translateY(-2px);color:#fff}
-.btn svg{width:15px;height:15px;flex:0 0 auto}
-.btn.red{background:linear-gradient(135deg,var(--orange-2),var(--orange) 60%,var(--orange-3));
-  border-color:rgba(255,140,50,.55);color:#1a0e05;font-weight:800;box-shadow:0 8px 24px -8px var(--orange-glow);
-  width:100%;padding:16px 18px;font-size:15px}
-.btn.red:hover{filter:brightness(1.08)}
-.btn.ghost{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.10);color:var(--text-2)}
-.btn.ghost:hover{background:rgba(255,255,255,.08);border-color:rgba(255,122,26,.35);color:#fff}
-.btn.sm{padding:6px 12px;font-size:12px;border-radius:9px}
-.btn.sm svg{width:13px;height:13px}
-.btn.danger:hover{color:#ff5555;border-color:rgba(255,85,85,.55);background:rgba(255,85,85,.10)}
-.btn:disabled{opacity:.4;cursor:not-allowed}
+/* ═══ BUTTONS ═══ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 16px;
+  border-radius:9px;border:1px solid var(--border-2);background:rgba(255,122,26,.06);
+  font-weight:700;font-size:13px;cursor:pointer;transition:all .2s;white-space:nowrap;color:var(--text-2)}
+.btn:hover{border-color:var(--border-3);background:rgba(255,122,26,.14);transform:translateY(-1px);color:#fff}
+.btn svg{width:14px;height:14px;flex:0 0 auto}
+.btn.primary{background:linear-gradient(135deg,var(--orange-2),var(--orange) 60%,var(--orange-3));
+  border-color:rgba(255,140,50,.55);color:#1a0e05;font-weight:800;box-shadow:0 6px 20px -6px var(--orange-glow);width:100%;padding:14px 16px;font-size:14px}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;border-color:var(--border);color:var(--mute)}
+.btn.ghost:hover{background:rgba(255,122,26,.08);border-color:var(--border-2);color:#fff}
+.btn.sm{padding:6px 11px;font-size:11.5px;border-radius:7px}
+.btn.sm svg{width:12px;height:12px}
+.btn.danger{border-color:rgba(239,68,68,.25);color:#f87171}
+.btn.danger:hover{background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.5);color:#fca5a5}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
 
-#app{display:grid;grid-template-columns:270px 1fr;min-height:100vh;position:relative;z-index:2}
-#app:not([hidden]){animation:fadeIn .6s}
-aside{background:linear-gradient(180deg,rgba(255,122,26,.04),transparent 40%),var(--side);
-  backdrop-filter:blur(28px);border-right:1px solid rgba(255,122,26,.10);
-  padding:24px 16px;display:flex;flex-direction:column;gap:5px;
+/* ═══ APP LAYOUT ═══ */
+#app{display:grid;grid-template-columns:240px 1fr;min-height:100vh;position:relative;z-index:2}
+#app:not([hidden]){animation:fadeIn .5s}
+
+/* ═══ SIDEBAR ═══ */
+aside{background:var(--side);border-right:1px solid var(--border);
+  padding:20px 14px;display:flex;flex-direction:column;gap:3px;
   position:sticky;top:0;height:100vh;z-index:30;overflow-y:auto}
-.brand{display:flex;align-items:center;gap:14px;font-weight:800;padding:8px 12px 26px;position:relative}
-.brand::after{content:"";position:absolute;bottom:12px;left:12px;right:12px;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,122,26,.25),transparent)}
-.brand .logo{width:44px;height:44px;border-radius:12px;
+.brand{display:flex;align-items:center;gap:12px;padding:6px 10px 22px;position:relative}
+.brand::after{content:"";position:absolute;bottom:10px;left:10px;right:10px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,122,26,.20),transparent)}
+.brand .logo{width:38px;height:38px;border-radius:10px;
   background:linear-gradient(135deg,rgba(255,122,26,.14),rgba(255,255,255,.03));
-  border:1px solid rgba(255,122,26,.30);display:grid;place-items:center;overflow:hidden;padding:6px;flex:0 0 auto}
+  border:1px solid var(--border-3);display:grid;place-items:center;overflow:hidden;padding:5px;flex:0 0 auto}
 .brand .logo img{width:100%;height:100%;object-fit:contain}
-.brand .logo .fallback{font-size:22px;font-weight:900;color:var(--orange)}
-.brand .name b{color:#fff;display:block;font-weight:800}
-.brand .name small{display:block;font-size:10.5px;font-weight:700;color:var(--orange-2);letter-spacing:1.2px;text-transform:uppercase;margin-top:2px}
+.brand .logo .fallback{font-size:20px;font-weight:900;color:var(--orange)}
+.brand .name b{color:#fff;display:block;font-weight:800;font-size:15px;letter-spacing:-.02em}
+.brand .name small{display:block;font-size:9.5px;font-weight:700;color:var(--orange-2);letter-spacing:1.2px;text-transform:uppercase;margin-top:1px}
 
-.nav{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;color:var(--mute);
-  font-weight:600;font-size:14px;cursor:pointer;background:none;border:0;text-align:left;width:100%;
-  transition:all .22s;position:relative;overflow:hidden}
-.nav::before{content:"";position:absolute;inset:0;
-  background:linear-gradient(90deg,rgba(255,122,26,.16),rgba(255,122,26,.03) 60%,transparent);
-  opacity:0;transition:opacity .22s}
-.nav:hover{color:var(--text-2);transform:translateX(3px)}
-.nav:hover::before{opacity:1}
-.nav.on{color:#fff;transform:translateX(4px)}
-.nav.on::before{opacity:1}
-.nav.on::after{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;
-  background:linear-gradient(180deg,var(--orange),var(--orange-3));border-radius:0 3px 3px 0;box-shadow:0 0 14px var(--orange-glow)}
-.nav > *{position:relative;z-index:1}
-.nav svg{width:18px;height:18px;flex:0 0 auto}
-.nav.on svg{color:var(--orange)}
-.nav small{margin-left:auto;font-size:11.5px;font-weight:800;color:var(--orange-2);
-  background:rgba(255,122,26,.10);padding:3px 9px;border-radius:7px;min-width:26px;text-align:center}
-.nav.on small{color:#0a0505;background:linear-gradient(180deg,var(--orange-2),var(--orange))}
-.bottom{margin-top:auto;padding-top:18px;border-top:1px solid rgba(255,122,26,.10)}
+.nav-section{padding:12px 10px 6px;font-size:10px;font-weight:800;color:var(--dim);
+  letter-spacing:1.2px;text-transform:uppercase}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:8px;color:var(--mute);
+  font-weight:600;font-size:13px;cursor:pointer;background:none;border:0;text-align:left;width:100%;
+  transition:all .18s;position:relative}
+.nav:hover{color:var(--text-2);background:rgba(255,122,26,.06)}
+.nav.on{color:#fff;background:linear-gradient(90deg,rgba(255,122,26,.14),rgba(255,122,26,.02))}
+.nav.on::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;
+  background:var(--orange);border-radius:0 3px 3px 0;box-shadow:0 0 10px var(--orange-glow)}
+.nav svg{width:16px;height:16px;flex:0 0 auto;opacity:.85}
+.nav.on svg{color:var(--orange);opacity:1}
+.nav small{margin-left:auto;font-size:10.5px;font-weight:800;color:var(--orange-2);
+  background:rgba(255,122,26,.10);padding:2px 7px;border-radius:5px;min-width:22px;text-align:center}
+.nav.on small{color:#0a0505;background:var(--orange)}
+.side-bottom{margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
 
-main{padding:32px 40px 80px}
-.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:32px;animation:riseIn .6s both}
-.page-head{display:flex;flex-direction:column;gap:6px}
-h1.t{font-size:34px;font-weight:800;letter-spacing:-.04em;line-height:1.15;
-  background:linear-gradient(180deg,#fff,var(--orange-2));-webkit-background-clip:text;background-clip:text;color:transparent}
-.t-sub{font-size:14px;color:var(--mute)}
-.acts{display:flex;gap:10px;flex-wrap:wrap}
+/* ═══ MAIN ═══ */
+main{padding:24px 28px 60px;min-width:0;overflow-x:hidden}
+.header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+  margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.header-left h1{font-size:24px;font-weight:800;letter-spacing:-.03em;
+  background:linear-gradient(180deg,#fff,var(--orange-2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.2}
+.header-left p{font-size:12.5px;color:var(--mute);margin-top:4px}
+.header-right{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.user-info{display:flex;align-items:center;gap:10px;padding:7px 12px;background:var(--panel);
+  border:1px solid var(--border);border-radius:10px;font-size:12px}
+.user-info .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulse 2s infinite}
+.user-info b{color:#fff;font-weight:700}
 
-.card{background:linear-gradient(180deg,rgba(255,122,26,.03),transparent 250px),var(--panel);
-  backdrop-filter:blur(20px);border:1px solid rgba(255,122,26,.12);border-radius:22px;overflow:hidden;
-  animation:riseIn .55s both;position:relative}
-.card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,122,26,.55),rgba(255,255,255,.25),transparent)}
-
-.tb{display:flex;gap:12px;padding:18px 20px;border-bottom:1px solid rgba(255,122,26,.08);flex-wrap:wrap;align-items:center}
-.tb input{background:rgba(0,0,0,.5);border:1px solid rgba(255,122,26,.18);border-radius:12px;
-  padding:12px 16px;outline:none;font-size:14px;font-weight:600;color:#fff;flex:1;min-width:200px}
-.tb input::placeholder{color:rgba(232,213,196,.4)}
-.tb input:focus{border-color:var(--orange);box-shadow:0 0 0 4px var(--orange-glow)}
-
-.scroll{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:760px}
-th{text-align:left;padding:14px 20px;font-size:11.5px;color:var(--orange-2);font-weight:800;
-  background:rgba(0,0,0,.45);border-bottom:1px solid rgba(255,122,26,.15);text-transform:uppercase;
-  letter-spacing:1px;white-space:nowrap}
-td{padding:16px 20px;border-bottom:1px solid rgba(255,122,26,.06);white-space:nowrap;font-size:13.5px}
-tbody tr:hover{background:linear-gradient(90deg,rgba(255,122,26,.06),transparent)}
-tbody tr:hover td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
-
-.key,.hw{font-family:var(--mono);font-size:12.5px;font-weight:600}
-.key{color:var(--orange-2);cursor:pointer;padding:5px 10px;border-radius:8px;background:rgba(255,122,26,.10);
-  border:1px solid rgba(255,122,26,.25);display:inline-block}
-.key:hover{background:rgba(255,122,26,.20);border-color:rgba(255,122,26,.55);color:#fff}
-.hw{color:var(--text-2)}
-.mut{color:var(--mute);font-size:13px}
-
-.badge{display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:99px;
-  font-size:11.5px;font-weight:800;border:1px solid transparent}
-.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 10px currentColor}
-.badge.active{color:var(--ok);background:rgba(143,217,168,.14);border-color:rgba(143,217,168,.25)}
-.badge.expired{color:var(--warn);background:rgba(232,200,138,.14);border-color:rgba(232,200,138,.25)}
-.badge.banned{color:var(--orange);background:rgba(255,122,26,.18);border-color:rgba(255,122,26,.35)}
-.badge.active::before{animation:pulse 2.4s ease-in-out infinite}
-
-.row{display:flex;gap:8px}
-.view{display:none}
-.view.on{display:block;animation:riseIn .5s}
-.empty{padding:60px 24px;text-align:center;color:var(--dim);font-size:14px}
-.sk{height:14px;border-radius:7px;background:linear-gradient(90deg,rgba(255,255,255,.03),rgba(255,255,255,.10),rgba(255,255,255,.03));
-  background-size:200% 100%;animation:shimmer 1.4s linear infinite;width:80%}
-tr.skeleton td{padding:18px 20px}
-
-.modal{position:fixed;inset:0;background:rgba(6,3,0,.80);display:grid;place-items:center;padding:20px;
-  z-index:200;animation:fadeIn .3s;backdrop-filter:blur(14px)}
-.box{background:linear-gradient(180deg,rgba(255,122,26,.05),transparent 120px),
-  linear-gradient(180deg,rgba(38,20,12,.99),rgba(20,10,6,.99));border:1px solid rgba(255,122,26,.25);
-  border-radius:22px;width:100%;max-width:480px;padding:32px;box-shadow:0 60px 140px -30px #000;
-  animation:popIn .45s;position:relative;overflow:hidden}
-.box::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent,var(--orange),#fff,transparent);background-size:200% 100%;
-  animation:flow 3s linear infinite}
-.modal-header{display:flex;align-items:center;gap:14px;margin-bottom:22px;padding-bottom:18px;
-  border-bottom:1px solid rgba(255,122,26,.10)}
-.modal-header .modal-logo{width:52px;height:52px;border-radius:12px;background:rgba(255,122,26,.10);
-  border:1px solid rgba(255,122,26,.30);display:grid;place-items:center;overflow:hidden;padding:7px}
-.modal-header .modal-logo img{width:100%;height:100%;object-fit:contain}
-.modal-header .modal-logo .fallback{font-size:24px;font-weight:900;color:var(--orange)}
-.modal-title b{font-size:18px;font-weight:800;color:#fff;display:block;line-height:1.2}
-.modal-title span{font-size:11px;font-weight:800;color:var(--orange-2);letter-spacing:1.2px;text-transform:uppercase}
-.fld{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
-.fld label{font-size:11.5px;font-weight:800;color:var(--orange-2);text-transform:uppercase;letter-spacing:1px}
-.fld input{background:rgba(0,0,0,.5);border:1px solid rgba(255,122,26,.18);border-radius:12px;
-  padding:12px 16px;outline:none;font-size:14px;font-weight:600;color:#fff;width:100%}
-.fld input:focus{border-color:var(--orange);box-shadow:0 0 0 4px var(--orange-glow)}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.foot{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}
-.out{background:rgba(0,0,0,.6);border:1px solid rgba(255,122,26,.20);border-radius:12px;
-  padding:16px 18px;font-family:var(--mono);font-size:12.5px;color:var(--orange-2);font-weight:600;
-  max-height:240px;overflow:auto;white-space:pre;margin-bottom:16px;line-height:1.8}
-
-#toasts{position:fixed;right:24px;bottom:24px;display:flex;flex-direction:column;gap:12px;z-index:300;pointer-events:none}
-.toast{display:flex;align-items:center;gap:13px;
-  background:linear-gradient(180deg,rgba(50,25,12,.98),rgba(30,15,8,.98));
-  border:1px solid rgba(255,122,26,.25);border-left:3px solid var(--orange);border-radius:14px;
-  padding:15px 20px;min-width:260px;font-weight:700;font-size:13.5px;
-  box-shadow:0 30px 70px -20px rgba(0,0,0,.95);animation:slideLeft .4s;pointer-events:auto;color:#fff8f0}
-.toast svg{width:18px;height:18px;color:var(--orange)}
-.toast.success svg{color:var(--ok)}
-.toast.error svg{color:#ff5555}
-
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
-.stat{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(255,122,26,.05),transparent 60%),var(--panel);
-  border:1px solid rgba(255,122,26,.15);border-radius:16px;padding:22px 24px;animation:riseIn .5s both}
+/* ═══ STATS GRID ═══ */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat{position:relative;overflow:hidden;background:var(--panel);border:1px solid var(--border);
+  border-radius:12px;padding:18px 20px;transition:all .25s}
+.stat:hover{transform:translateY(-2px);border-color:var(--border-2)}
 .stat::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,transparent,var(--accent,var(--orange)),transparent)}
-.stat .ico{width:38px;height:38px;border-radius:11px;background:var(--accent-bg,rgba(255,122,26,.10));
-  color:var(--accent,var(--orange));display:grid;place-items:center;margin-bottom:14px}
-.stat span{display:block;font-size:11.5px;color:var(--mute);font-weight:800;text-transform:uppercase;
-  letter-spacing:1.2px;margin-bottom:6px}
-.stat b{display:block;font-size:36px;font-weight:800;letter-spacing:-.05em;line-height:1;color:var(--accent,var(--text))}
-.stat[data-tone="ok"]{--accent:var(--ok);--accent-bg:rgba(143,217,168,.12)}
-.stat[data-tone="warn"]{--accent:var(--warn);--accent-bg:rgba(232,200,138,.12)}
-.stat[data-tone="bad"]{--accent:#ff5555;--accent-bg:rgba(255,85,85,.12)}
-.stat[data-tone="total"]{--accent:var(--orange-2);--accent-bg:rgba(255,122,26,.12)}
+.stat .ico{width:32px;height:32px;border-radius:8px;background:var(--accent-bg,rgba(255,122,26,.10));
+  color:var(--accent,var(--orange));display:grid;place-items:center;margin-bottom:12px}
+.stat .ico svg{width:16px;height:16px}
+.stat span{display:block;font-size:10.5px;color:var(--mute);font-weight:800;
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.stat b{display:block;font-size:28px;font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--accent,var(--text))}
+.stat[data-tone="ok"]{--accent:var(--ok);--accent-bg:rgba(74,222,128,.10)}
+.stat[data-tone="warn"]{--accent:var(--warn);--accent-bg:rgba(251,191,36,.10)}
+.stat[data-tone="bad"]{--accent:var(--bad);--accent-bg:rgba(239,68,68,.10)}
+.stat[data-tone="total"]{--accent:var(--orange-2);--accent-bg:rgba(255,122,26,.10)}
 
-.quick{padding:16px 20px;border-bottom:1px solid rgba(255,122,26,.08);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.quick .lbl{font-size:11.5px;color:var(--orange-2);text-transform:uppercase;letter-spacing:1.2px;font-weight:800;margin-right:10px}
-.quick button{padding:8px 15px;font-size:12.5px;border-radius:10px;border:1px solid rgba(255,122,26,.18);
-  background:rgba(255,122,26,.05);color:var(--text-2);font-weight:700;cursor:pointer;transition:all .22s}
-.quick button:hover{border-color:var(--orange);color:#fff;background:rgba(255,122,26,.18);transform:translateY(-2px)}
+/* ═══ CARD / TABLE ═══ */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:16px 20px;border-bottom:1px solid var(--border);background:var(--panel-2)}
+.card-head h2{font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
+.card-head h2 svg{width:16px;height:16px;color:var(--orange)}
+.toolbar{display:flex;gap:10px;padding:14px 20px;border-bottom:1px solid var(--border);
+  flex-wrap:wrap;align-items:center;background:var(--panel-2)}
+.toolbar input{background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:8px;
+  padding:9px 13px;outline:none;font-size:13px;font-weight:600;color:#fff;flex:1;min-width:180px}
+.toolbar input::placeholder{color:rgba(232,213,196,.35)}
+.toolbar input:focus{border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-glow)}
+.toolbar select{background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:8px;
+  padding:9px 13px;outline:none;font-size:13px;font-weight:600;color:#fff;cursor:pointer}
 
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:11px 16px;font-size:10.5px;color:var(--orange-2);font-weight:800;
+  background:rgba(0,0,0,.30);border-bottom:1px solid var(--border);
+  text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
+td{padding:12px 16px;border-bottom:1px solid rgba(255,122,26,.05);white-space:nowrap;
+  font-size:12.5px;vertical-align:middle}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:rgba(255,122,26,.04)}
+tbody tr:last-child td{border-bottom:0}
+
+/* ═══ KEY / HWID ═══ */
+.key,.hw{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.02em}
+.key{color:var(--orange-2);cursor:pointer;padding:4px 9px;border-radius:6px;
+  background:rgba(255,122,26,.08);border:1px solid var(--border-2);
+  display:inline-flex;align-items:center;gap:6px;transition:all .18s}
+.key:hover{background:rgba(255,122,26,.16);border-color:var(--border-3);color:#fff}
+.key::after{content:"⧉";opacity:.5;font-size:11px}
+.hw{color:var(--text-2)}
+.mut{color:var(--mute);font-size:12px}
+
+/* ═══ BADGES ═══ */
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;
+  font-size:11px;font-weight:800;border:1px solid transparent;letter-spacing:.02em}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor}
+.badge.active{color:var(--ok);background:rgba(74,222,128,.10);border-color:rgba(74,222,128,.22)}
+.badge.expired{color:var(--warn);background:rgba(251,191,36,.10);border-color:rgba(251,191,36,.22)}
+.badge.banned{color:var(--bad);background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.22)}
+.badge.unused{color:var(--blue);background:rgba(96,165,250,.10);border-color:rgba(96,165,250,.22)}
+.badge.active::before{animation:pulse 2s infinite}
+
+/* ═══ VIEWS ═══ */
+.view{display:none}
+.view.on{display:block;animation:riseIn .4s}
+.empty{padding:60px 24px;text-align:center;color:var(--dim);font-size:13px;
+  display:flex;flex-direction:column;align-items:center;gap:12px}
+.empty::before{content:"";width:48px;height:48px;border-radius:12px;
+  background:rgba(255,122,26,.08);border:1px solid var(--border-2);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff7a1a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.35-4.35'/></svg>");
+  background-repeat:no-repeat;background-position:center;background-size:22px}
+.sk{height:12px;border-radius:6px;background:linear-gradient(90deg,rgba(255,122,26,.05),rgba(255,122,26,.15),rgba(255,122,26,.05));
+  background-size:200% 100%;animation:shimmer 1.4s linear infinite;width:80%}
+tr.skeleton td{padding:16px}
+
+/* ═══ ACTIONS BTNS ═══ */
+.row{display:flex;gap:6px}
+
+/* ═══ MODAL ═══ */
+.modal{position:fixed;inset:0;background:rgba(6,3,0,.80);display:grid;place-items:center;padding:20px;
+  z-index:200;animation:fadeIn .2s;backdrop-filter:blur(10px)}
+.box{background:linear-gradient(180deg,rgba(30,16,10,.99),rgba(20,10,5,.99));
+  border:1px solid var(--border-2);border-radius:16px;width:100%;max-width:460px;padding:28px;
+  box-shadow:0 60px 140px -30px #000,0 0 60px -20px var(--orange-glow);animation:popIn .4s;
+  position:relative;overflow:hidden}
+.box::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--orange),#fff,transparent);
+  background-size:200% 100%;animation:flow 3s linear infinite}
+.modal-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;
+  border-bottom:1px solid var(--border)}
+.modal-header .modal-logo{width:44px;height:44px;border-radius:10px;
+  background:rgba(255,122,26,.10);border:1px solid var(--border-2);
+  display:grid;place-items:center;overflow:hidden;padding:6px}
+.modal-header .modal-logo img{width:100%;height:100%;object-fit:contain}
+.modal-header .modal-logo .fallback{font-size:22px;font-weight:900;color:var(--orange)}
+.modal-title b{font-size:16px;font-weight:800;color:#fff;display:block;line-height:1.2}
+.modal-title span{font-size:10.5px;font-weight:800;color:var(--orange-2);letter-spacing:1px;text-transform:uppercase}
+.fld{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.fld label{font-size:10.5px;font-weight:800;color:var(--orange-2);text-transform:uppercase;letter-spacing:1px}
+.fld input{background:rgba(0,0,0,.5);border:1px solid var(--border-2);border-radius:9px;
+  padding:11px 14px;outline:none;font-size:13px;font-weight:600;color:#fff;width:100%}
+.fld input:focus{border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-glow)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.foot{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}
+.out{background:rgba(0,0,0,.55);border:1px solid var(--border-2);border-radius:10px;
+  padding:14px;font-family:var(--mono);font-size:12px;color:var(--orange-2);font-weight:600;
+  max-height:220px;overflow:auto;white-space:pre;margin-bottom:14px;line-height:1.8}
+
+/* ═══ TOASTS ═══ */
+#toasts{position:fixed;right:20px;bottom:20px;display:flex;flex-direction:column;gap:10px;z-index:300;pointer-events:none}
+.toast{display:flex;align-items:center;gap:11px;
+  background:linear-gradient(180deg,rgba(30,16,10,.98),rgba(20,10,5,.98));
+  border:1px solid var(--border-2);border-left:3px solid var(--orange);border-radius:11px;
+  padding:13px 18px;min-width:240px;font-weight:700;font-size:12.5px;
+  box-shadow:0 20px 50px -15px rgba(0,0,0,.95);animation:slideLeft .35s;pointer-events:auto;color:#fff8f0}
+.toast svg{width:16px;height:16px;color:var(--orange)}
+.toast.success{border-left-color:var(--ok)}
+.toast.success svg{color:var(--ok)}
+.toast.error{border-left-color:var(--bad)}
+.toast.error svg{color:#f87171}
+
+/* ═══ RESPONSIVE ═══ */
 @media(max-width:960px){
   #app{grid-template-columns:1fr}
-  aside{position:sticky;top:0;height:auto;width:100%;flex-direction:row;align-items:center;gap:8px;
-    padding:12px 14px;border-right:0;border-bottom:1px solid rgba(255,122,26,.10);overflow-x:auto}
-  .brand{padding:0 12px 0 0}.brand::after{display:none}.brand .name{display:none}
-  .nav{width:auto;padding:10px 14px;font-size:13px}.nav.on::after{display:none}
-  .bottom{margin:0 0 0 auto;padding:0;border:0}.bottom .btn .txt{display:none}
-  main{padding:20px 18px 60px}
-  h1.t{font-size:26px}
-  .stats{grid-template-columns:repeat(2,1fr);gap:12px}
-  .stat b{font-size:26px}
-  table{min-width:0}thead{display:none}
+  aside{position:sticky;top:0;height:auto;width:100%;flex-direction:row;align-items:center;gap:6px;
+    padding:10px 12px;border-right:0;border-bottom:1px solid var(--border);overflow-x:auto;
+    scrollbar-width:none;flex-wrap:nowrap}
+  aside::-webkit-scrollbar{display:none}
+  .brand{padding:0 10px 0 0;flex:0 0 auto}
+  .brand::after{display:none}
+  .brand .name{display:none}
+  .nav-section{display:none}
+  .nav{width:auto;padding:8px 12px;font-size:12px;flex:0 0 auto;white-space:nowrap}
+  .nav.on::before{display:none}
+  .nav small{display:none}
+  .side-bottom{margin:0 0 0 auto;padding:0;border:0}
+  .side-bottom .btn .txt{display:none}
+  main{padding:16px 14px 40px}
+  .header{flex-direction:column;align-items:flex-start}
+  .header-left h1{font-size:20px}
+  .header-right{width:100%}
+  .header-right .btn{flex:1}
+  .stats{grid-template-columns:repeat(2,1fr);gap:10px}
+  .stat b{font-size:22px}
+  table{min-width:0}
+  thead{display:none}
   table,tbody,tr,td{display:block;width:100%}
-  tbody tr{background:var(--panel-2);border:1px solid rgba(255,122,26,.15);border-radius:16px;padding:18px 20px;margin-bottom:12px}
-  td{border:0;padding:9px 0;display:flex;justify-content:space-between;gap:14px}
-  td::before{content:attr(data-l);color:var(--orange-2);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px}
+  tbody tr{background:var(--panel-2);border:1px solid var(--border);border-radius:12px;
+    padding:14px 16px;margin-bottom:10px}
+  td{border:0;padding:6px 0;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  td::before{content:attr(data-l);color:var(--orange-2);font-size:10.5px;font-weight:800;
+    text-transform:uppercase;letter-spacing:1px;flex:0 0 auto}
+  td[data-l=""]::before{display:none}
+  td .row{width:100%;justify-content:stretch;gap:6px}
   td .row .btn{flex:1}
+  td:last-child{border-top:1px solid var(--border);padding-top:12px;margin-top:6px}
+  .key,.hw{word-break:break-all;white-space:normal;text-align:right}
   .modal{padding:0;place-items:end center}
-  .box{border-radius:28px 28px 0 0;padding:26px 20px;max-height:92dvh;overflow-y:auto}
+  .box{border-radius:20px 20px 0 0;padding:22px 18px;max-height:92vh;overflow-y:auto;max-width:100%}
   .box::before{display:none}
   .two{grid-template-columns:1fr}
-  #toasts{left:14px;right:14px}.toast{min-width:0;width:100%}
-  .lbox{padding:36px 26px}
+  #toasts{left:14px;right:14px}
+  .toast{min-width:0;width:100%}
 }
 </style>
 </head>
 <body>
 
+<!-- ═══ LOGIN ═══ -->
 <div id="login">
   <form class="lbox" id="loginForm" autocomplete="off">
     <div class="logo-wrap">
       <img src="raxo.png" alt="Raxo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
       <span class="fallback" style="display:none">R</span>
     </div>
-    <h1>Raxo Panel</h1>
-    <p>Connecte-toi pour gérer tes licences Akeiro.</p>
+    <h1>Raxo Auth System</h1>
+    <p>Connecte-toi pour gérer tes licences</p>
     <input type="password" id="adminKey" placeholder="Clé d'administration" autocomplete="off" spellcheck="false">
-    <button class="btn red" type="submit" id="loginBtn">
+    <button class="btn primary" type="submit" id="loginBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
       Se connecter
     </button>
@@ -280,6 +339,7 @@ tr.skeleton td{padding:18px 20px}
   </form>
 </div>
 
+<!-- ═══ APP ═══ -->
 <div id="app" hidden>
   <aside>
     <div class="brand">
@@ -287,23 +347,34 @@ tr.skeleton td{padding:18px 20px}
         <img src="raxo.png" alt="Raxo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
         <span class="fallback" style="display:none">R</span>
       </div>
-      <div class="name"><b>Raxo</b><small>Admin Panel</small></div>
+      <div class="name"><b>Raxo</b><small>Auth</small></div>
     </div>
 
-    <button class="nav on" data-view="keys">
+    <div class="nav-section">Gestion</div>
+    <button class="nav on" data-view="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+      Dashboard
+    </button>
+    <button class="nav" data-view="keys">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       Licences <small id="nKeys">0</small>
     </button>
     <button class="nav" data-view="hwid">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-      HWID bannis <small id="nHwid">0</small>
+      Blacklist HWID <small id="nHwid">0</small>
     </button>
+
+    <div class="nav-section">Système</div>
     <button class="nav" data-view="logs">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       Logs
     </button>
+    <button class="nav" data-view="settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Paramètres
+    </button>
 
-    <div class="bottom">
+    <div class="side-bottom">
       <button class="btn ghost" id="logout" style="width:100%">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
         <span class="txt">Déconnexion</span>
@@ -312,70 +383,141 @@ tr.skeleton td{padding:18px 20px}
   </aside>
 
   <main>
-    <div class="top">
-      <div class="page-head">
-        <h1 class="t" id="title">Licences</h1>
-        <span class="t-sub" id="subtitle">Gère les clés Akeiro</span>
+    <div class="header">
+      <div class="header-left">
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageSubtitle">Vue d'ensemble de ton système de licences</p>
       </div>
-      <div class="acts">
+      <div class="header-right">
+        <div class="user-info">
+          <span class="dot"></span>
+          <span>Admin</span>
+          <b>Raxo</b>
+        </div>
         <button class="btn ghost" id="refresh">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/></svg>
           <span class="txt">Rafraîchir</span>
         </button>
-        <button class="btn red" id="newKey" style="width:auto">
+        <button class="btn primary" id="newKey" style="width:auto">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span class="txt">Nouvelle clé</span>
+          <span>Nouvelle clé</span>
         </button>
       </div>
     </div>
 
-    <section class="view on" id="v-keys">
+    <!-- DASHBOARD -->
+    <section class="view on" id="v-dashboard">
       <div class="stats" id="stats"></div>
       <div class="card">
-        <div class="quick">
-          <span class="lbl">⚡ Génération rapide</span>
-          <button type="button" data-quick="1">1 jour</button>
-          <button type="button" data-quick="3">3 jours</button>
-          <button type="button" data-quick="7">7 jours</button>
-          <button type="button" data-quick="30">30 jours</button>
-          <button type="button" data-quick="90">90 jours</button>
-          <button type="button" data-quick="365">1 an</button>
+        <div class="card-head">
+          <h2>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Activité récente
+          </h2>
         </div>
-        <div class="tb">
-          <input id="q" type="search" placeholder="Rechercher une clé ou un HWID…">
+        <div class="toolbar" style="border-top:0;border-bottom:1px solid var(--border)">
+          <input id="qDash" type="search" placeholder="Rechercher une clé, HWID…">
         </div>
-        <div class="scroll"><table>
-          <thead><tr><th>Clé</th><th>Statut</th><th>Durée</th><th>HWID</th><th>Expire le</th><th>Restant</th><th></th></tr></thead>
+        <table>
+          <thead><tr><th>Clé</th><th>Statut</th><th>Durée</th><th>HWID</th><th>Expire</th></tr></thead>
+          <tbody id="dashBody"></tbody>
+        </table>
+        <div class="empty" id="dashEmpty">Chargement…</div>
+      </div>
+    </section>
+
+    <!-- LICENCES -->
+    <section class="view" id="v-keys">
+      <div class="stats" id="statsKeys"></div>
+      <div class="card">
+        <div class="card-head">
+          <h2>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Toutes les licences
+          </h2>
+        </div>
+        <div class="toolbar">
+          <input id="q" type="search" placeholder="Rechercher par clé ou HWID…">
+          <select id="filterStatus">
+            <option value="">Tous les statuts</option>
+            <option value="active">Actives</option>
+            <option value="expired">Expirées</option>
+            <option value="banned">Bannies</option>
+            <option value="unused">Non utilisées</option>
+          </select>
+        </div>
+        <table>
+          <thead><tr><th>Clé</th><th>Statut</th><th>Durée</th><th>HWID</th><th>Expire le</th><th>Restant</th><th>Actions</th></tr></thead>
           <tbody id="keysBody"></tbody>
-        </table></div>
+        </table>
         <div class="empty" id="keysEmpty">Chargement…</div>
       </div>
     </section>
 
+    <!-- HWID BLACKLIST -->
     <section class="view" id="v-hwid">
       <div class="card">
-        <div class="tb">
-          <input id="newHwid" type="text" placeholder="HWID à bannir" autocomplete="off" spellcheck="false">
-          <button class="btn red" id="banHwid" style="width:auto">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-            Bannir ce HWID
+        <div class="card-head">
+          <h2>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            HWID blacklistés
+          </h2>
+        </div>
+        <div class="toolbar">
+          <input id="newHwid" type="text" placeholder="HWID à blacklister">
+          <button class="btn primary" id="banHwid" style="width:auto">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Blacklister
           </button>
         </div>
-        <div class="scroll"><table>
-          <thead><tr><th>HWID banni</th><th>Ajouté le</th><th></th></tr></thead>
+        <table>
+          <thead><tr><th>HWID</th><th>Ajouté le</th><th>Raison</th><th></th></tr></thead>
           <tbody id="hwidBody"></tbody>
-        </table></div>
-        <div class="empty" id="hwidEmpty">Chargement…</div>
+        </table>
+        <div class="empty" id="hwidEmpty">Aucun HWID blacklisté.</div>
       </div>
     </section>
 
+    <!-- LOGS -->
     <section class="view" id="v-logs">
       <div class="card">
-        <div class="scroll"><table>
+        <div class="card-head">
+          <h2>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Journal d'activité
+          </h2>
+        </div>
+        <table>
           <thead><tr><th>Date</th><th>Type</th><th>Détail</th></tr></thead>
           <tbody id="logsBody"></tbody>
-        </table></div>
-        <div class="empty" id="logsEmpty">Chargement…</div>
+        </table>
+        <div class="empty" id="logsEmpty">Aucun log.</div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="view" id="v-settings">
+      <div class="card">
+        <div class="card-head">
+          <h2>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>
+            Informations du système
+          </h2>
+        </div>
+        <div style="padding:20px">
+          <div class="fld">
+            <label>URL de l'API</label>
+            <input type="text" value="https://raxo-api.raxoshopp.workers.dev" readonly style="font-family:var(--mono);font-size:12px">
+          </div>
+          <div class="fld">
+            <label>Format des clés</label>
+            <input type="text" value="Akeiro-xxxx-xxxx-xxxx-xxxx-xxxx" readonly style="font-family:var(--mono);font-size:12px">
+          </div>
+          <div class="fld">
+            <label>Version du panel</label>
+            <input type="text" value="1.0.0" readonly style="font-family:var(--mono);font-size:12px">
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -387,11 +529,11 @@ tr.skeleton td{padding:18px 20px}
 "use strict";
 
 // ═══════════════════════════════════════════════════════
-// CONFIG — Modifie ces 2 lignes si besoin
+// CONFIG
 // ═══════════════════════════════════════════════════════
 const API_URL = "https://raxo-api.raxoshopp.workers.dev";
-
 let adminKey = '';
+
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate = ts => new Date(ts).toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
@@ -400,8 +542,8 @@ const fmtLeft = ms => {
   const d = Math.floor(ms / 864e5), h = Math.floor((ms % 864e5) / 36e5), m = Math.floor((ms % 36e5) / 6e4);
   return d ? `${d}j ${h}h` : h ? `${h}h ${m}m` : `${m}m`;
 };
-const statusOf = k => k.banned ? 'banned' : Date.now() > k.expiresAt ? 'expired' : 'active';
-const statusNames = { active: 'Active', expired: 'Expirée', banned: 'Bannie' };
+const statusOf = k => k.banned ? 'banned' : !k.hwid ? 'unused' : Date.now() > k.expiresAt ? 'expired' : 'active';
+const statusNames = { active: 'Active', expired: 'Expirée', banned: 'Bannie', unused: 'Non utilisée' };
 
 function toast(msg, type){
   const el = document.createElement('div');
@@ -455,29 +597,31 @@ $('logout').onclick = () => {
 
 // NAV
 const titles = {
-  keys: ['Licences', 'Gère les clés Akeiro'],
-  hwid: ['HWID bannis', 'Liste noire des identifiants matériels'],
-  logs: ['Logs', 'Historique des événements du panel']
+  dashboard: ['Dashboard', 'Vue d\'ensemble de ton système de licences'],
+  keys: ['Licences', 'Gère toutes tes clés Akeiro'],
+  hwid: ['Blacklist HWID', 'Liste noire des identifiants matériels'],
+  logs: ['Logs', 'Historique des événements du panel'],
+  settings: ['Paramètres', 'Configuration du panel']
 };
 document.querySelectorAll('.nav').forEach(b => b.onclick = () => {
   document.querySelectorAll('.nav').forEach(n => n.classList.toggle('on', n === b));
   document.querySelectorAll('.view').forEach(s => s.classList.toggle('on', s.id === 'v-' + b.dataset.view));
   const [t, s] = titles[b.dataset.view] || ['', ''];
-  $('title').textContent = t;
-  $('subtitle').textContent = s;
-  $('newKey').hidden = b.dataset.view !== 'keys';
+  $('pageTitle').textContent = t;
+  $('pageSubtitle').textContent = s;
+  $('newKey').hidden = !['dashboard','keys'].includes(b.dataset.view);
   if (b.dataset.view === 'hwid') loadBlacklist();
   if (b.dataset.view === 'logs') loadLogs();
 });
 
 // STATS
-function renderStats(keys){
-  const c = { active: 0, expired: 0, banned: 0 };
+function renderStatsTo(targetId, keys){
+  const c = { active: 0, expired: 0, banned: 0, unused: 0 };
   keys.forEach(k => c[statusOf(k)]++);
-  $('stats').innerHTML = [
+  $(targetId).innerHTML = [
     ['Total', keys.length, 'total'],
     ['Actives', c.active, 'ok'],
-    ['Expirées', c.expired, 'warn'],
+    ['Non utilisées', c.unused, 'total'],
     ['Bannies', c.banned, 'bad']
   ].map(([a, b, tone]) =>
     `<div class="stat" data-tone="${tone}">
@@ -493,12 +637,15 @@ let allKeys = [];
 async function loadKeys(){
   $('keysEmpty').hidden = true;
   $('keysBody').innerHTML = '<tr class="skeleton"><td colspan="7"><div class="sk"></div></td></tr>'.repeat(5);
+  $('dashBody').innerHTML = '<tr class="skeleton"><td colspan="5"><div class="sk"></div></td></tr>'.repeat(3);
   try {
     const r = await callAPI('list');
     if (!r.ok){ toast(r.error || 'Erreur', 'error'); return; }
     allKeys = r.keys || [];
-    renderStats(allKeys);
+    renderStatsTo('stats', allKeys);
+    renderStatsTo('statsKeys', allKeys);
     renderRows();
+    renderDash();
     $('nKeys').textContent = allKeys.length;
   } catch {
     toast('Erreur de chargement', 'error');
@@ -509,8 +656,10 @@ async function loadKeys(){
 
 function renderRows(){
   const q = ($('q').value || '').trim().toUpperCase();
-  const rows = !q ? allKeys : allKeys.filter(k =>
-    k.key.toUpperCase().includes(q) || (k.hwid || '').toUpperCase().includes(q)
+  const fs = $('filterStatus').value;
+  const rows = allKeys.filter(k =>
+    (!fs || statusOf(k) === fs) &&
+    (!q || k.key.toUpperCase().includes(q) || (k.hwid || '').toUpperCase().includes(q))
   );
   $('keysEmpty').hidden = rows.length > 0;
   $('keysEmpty').textContent = allKeys.length ? 'Aucune clé ne correspond.' : 'Aucune clé. Crée-en une.';
@@ -522,21 +671,43 @@ function renderRows(){
       <td data-l="Clé"><span class="key" data-copy="${esc(k.key)}">${esc(k.key)}</span></td>
       <td data-l="Statut"><span class="badge ${s}">${statusNames[s]}</span></td>
       <td data-l="Durée" class="mut">${esc(k.days || '?')} j</td>
-      <td data-l="HWID">${k.hwid ? `<span class="hw">${esc(k.hwid)}</span>` : '<span class="mut"><i>libre</i></span>'}</td>
+      <td data-l="HWID">${k.hwid ? `<span class="hw">${esc(k.hwid)}</span>` : '<span class="mut"><i>—</i></span>'}</td>
       <td data-l="Expire le" class="mut">${fmtDate(k.expiresAt)}</td>
       <td data-l="Restant" class="mut">${s === 'active' ? fmtLeft(k.expiresAt - Date.now()) : '—'}</td>
       <td data-l="Actions"><div class="row">
         <button class="btn ghost sm" data-act="${k.banned ? 'unban' : 'ban'}" data-key="${esc(k.key)}">${k.banned ? 'Débannir' : 'Bannir'}</button>
-        <button class="btn ghost sm" data-act="del" data-key="${esc(k.key)}">Suppr.</button>
+        <button class="btn danger sm" data-act="del" data-key="${esc(k.key)}">Suppr.</button>
       </div></td>`;
     frag.appendChild(tr);
   });
   $('keysBody').replaceChildren(frag);
 }
 
-$('q').oninput = renderRows;
+function renderDash(){
+  const q = ($('qDash').value || '').trim().toUpperCase();
+  const rows = (q ? allKeys.filter(k => k.key.toUpperCase().includes(q) || (k.hwid || '').toUpperCase().includes(q)) : allKeys).slice(0, 10);
+  $('dashEmpty').hidden = rows.length > 0;
+  $('dashEmpty').textContent = 'Aucune clé. Crée-en une.';
+  const frag = document.createDocumentFragment();
+  rows.forEach(k => {
+    const s = statusOf(k);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td data-l="Clé"><span class="key" data-copy="${esc(k.key)}">${esc(k.key)}</span></td>
+      <td data-l="Statut"><span class="badge ${s}">${statusNames[s]}</span></td>
+      <td data-l="Durée" class="mut">${esc(k.days || '?')} j</td>
+      <td data-l="HWID">${k.hwid ? `<span class="hw">${esc(k.hwid)}</span>` : '<span class="mut"><i>—</i></span>'}</td>
+      <td data-l="Expire" class="mut">${fmtDate(k.expiresAt)}</td>`;
+    frag.appendChild(tr);
+  });
+  $('dashBody').replaceChildren(frag);
+}
 
-$('keysBody').addEventListener('click', async e => {
+$('q').oninput = renderRows;
+$('filterStatus').onchange = renderRows;
+$('qDash').oninput = renderDash;
+
+document.addEventListener('click', async e => {
   const cp = e.target.closest('[data-copy]');
   if (cp){
     try { await navigator.clipboard.writeText(cp.dataset.copy); toast('Clé copiée', 'success'); }
@@ -561,7 +732,7 @@ $('keysBody').addEventListener('click', async e => {
   } catch { toast('Erreur réseau', 'error'); b.disabled = false; }
 });
 
-// MODAL NEW KEY
+// NEW KEY MODAL
 $('newKey').onclick = () => openNewKeyModal(30);
 document.querySelectorAll('[data-quick]').forEach(btn => {
   btn.onclick = () => openNewKeyModal(parseInt(btn.dataset.quick, 10));
@@ -576,7 +747,7 @@ function openNewKeyModal(days){
         <img src="raxo.png" alt="Raxo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
         <span class="fallback" style="display:none">R</span>
       </div>
-      <div class="modal-title"><b>Raxo</b><span>Créer une nouvelle clé Akeiro</span></div>
+      <div class="modal-title"><b>Raxo</b><span>Générer des clés Akeiro</span></div>
     </div>
     <div class="two">
       <div class="fld"><label>Durée (jours)</label><input id="nDays" type="number" min="1" max="9999" value="${days}"></div>
@@ -585,7 +756,7 @@ function openNewKeyModal(days){
     <div class="fld"><label>HWID (facultatif)</label><input id="nh" placeholder="Laisser vide pour une clé libre"></div>
     <div class="foot">
       <button class="btn ghost" id="c1">Annuler</button>
-      <button class="btn red" id="c2" style="width:auto">Créer</button>
+      <button class="btn primary" id="c2" style="width:auto">Générer</button>
     </div>
   </div>`;
   document.body.appendChild(m);
@@ -603,7 +774,7 @@ function openNewKeyModal(days){
       const r = await callAPI('create', { days: daysVal, quantity, hwid });
       if (!r.ok){ toast(r.error || 'Erreur', 'error'); m.querySelector('#c2').disabled = false; return; }
       close();
-      toast(r.created.length + ' clé(s) ' + daysVal + 'j créée(s)', 'success');
+      toast(r.created.length + ' clé(s) Akeiro créée(s)', 'success');
       await loadKeys();
       const rm = document.createElement('div');
       rm.className = 'modal';
@@ -613,12 +784,12 @@ function openNewKeyModal(days){
             <img src="raxo.png" alt="Raxo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
             <span class="fallback" style="display:none">R</span>
           </div>
-          <div class="modal-title"><b>Raxo</b><span>Clés Akeiro générées</span></div>
+          <div class="modal-title"><b>Raxo</b><span>${r.created.length} clé(s) générée(s)</span></div>
         </div>
         <div class="out"></div>
         <div class="foot">
           <button class="btn ghost" id="r1">Fermer</button>
-          <button class="btn red" id="r2" style="width:auto">Copier tout</button>
+          <button class="btn primary" id="r2" style="width:auto">Copier tout</button>
         </div>
       </div>`;
       rm.querySelector('.out').textContent = r.created.join('\n');
@@ -651,13 +822,14 @@ async function loadBlacklist(){
 
 function renderBlacklist(){
   $('hwidEmpty').hidden = allBlacklist.length > 0;
-  $('hwidEmpty').textContent = 'Aucun HWID banni.';
+  $('hwidEmpty').textContent = 'Aucun HWID blacklisté.';
   const frag = document.createDocumentFragment();
   allBlacklist.forEach(b => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td data-l="HWID"><span class="hw" style="color:#ffb066">${esc(b.hwid)}</span></td>
       <td data-l="Ajouté le" class="mut">${fmtDate(b.ts)}</td>
+      <td data-l="Raison" class="mut">${esc(b.reason || '—')}</td>
       <td data-l=""><button class="btn ghost sm" data-h="${esc(b.hwid)}">Retirer</button></td>`;
     frag.appendChild(tr);
   });
@@ -671,13 +843,13 @@ $('banHwid').onclick = async () => {
     const r = await callAPI('blacklist', { hwid: v });
     if (!r.ok) return toast(r.error || 'Erreur', 'error');
     $('newHwid').value = '';
-    toast('HWID banni', 'success');
+    toast('HWID blacklisté', 'success');
     await loadBlacklist();
   } catch { toast('Erreur réseau', 'error'); }
 };
 $('newHwid').addEventListener('keydown', e => { if (e.key === 'Enter') $('banHwid').click(); });
 
-$('hwidBody').addEventListener('click', async e => {
+document.addEventListener('click', async e => {
   const b = e.target.closest('[data-h]');
   if (!b) return;
   const hwid = b.dataset.h;
