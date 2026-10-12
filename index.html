@@ -10,36 +10,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a0505;
-  --bg-2:#100808;
-  --side:#0d0606;
-  --side-2:#140a08;
-  --panel:#15100d;
-  --panel-2:#1a120e;
-  --border:rgba(255,122,26,.10);
-  --border-2:rgba(255,122,26,.18);
-  --border-3:rgba(255,122,26,.30);
-  --text:#fff8f2;
-  --text-2:#e8d5c4;
-  --mute:#a88a72;
-  --dim:#5a4030;
-  --orange:#ff7a1a;
-  --orange-2:#ffa64d;
-  --orange-3:#e56a0a;
+  --bg:#0a0505;--bg-2:#100808;--side:#0d0606;--side-2:#140a08;
+  --panel:#15100d;--panel-2:#1a120e;
+  --border:rgba(255,122,26,.10);--border-2:rgba(255,122,26,.18);--border-3:rgba(255,122,26,.30);
+  --text:#fff8f2;--text-2:#e8d5c4;--mute:#a88a72;--dim:#5a4030;
+  --orange:#ff7a1a;--orange-2:#ffa64d;--orange-3:#e56a0a;
   --orange-glow:rgba(255,122,26,.45);
-  --ok:#4ade80;
-  --warn:#fbbf24;
-  --bad:#ef4444;
-  --blue:#60a5fa;
-  --purple:#a78bfa;
+  --ok:#4ade80;--warn:#fbbf24;--bad:#ef4444;--blue:#60a5fa;
   --sans:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{overflow-x:hidden}
-body{background:var(--bg);color:var(--text);font:13.5px/1.6 var(--sans);font-weight:500;min-height:100vh;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
-button,input,select,textarea{font:inherit;color:inherit;font-weight:500}
-input,select,textarea{font-weight:600}
+body{background:var(--bg);color:var(--text);font:13.5px/1.6 var(--sans);font-weight:500;min-height:100vh;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit;font-weight:500}
+input,select{font-weight:600}
 [hidden]{display:none!important}
 ::selection{background:var(--orange-glow);color:#fff}
 ::-webkit-scrollbar{width:10px;height:10px}
@@ -56,7 +41,6 @@ input,select,textarea{font-weight:600}
 @keyframes flow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
-/* ═══ LOGIN ═══ */
 #login{position:fixed;inset:0;display:grid;place-items:center;padding:20px;z-index:100;
   background:radial-gradient(1000px 700px at 50% -10%,rgba(255,122,26,.15),transparent 60%),
   radial-gradient(900px 600px at 85% 110%,rgba(255,122,26,.08),transparent 60%),var(--bg)}
@@ -86,14 +70,14 @@ input,select,textarea{font-weight:600}
 .err{color:var(--orange-2);font-size:12.5px;margin-top:14px;padding:12px 14px;background:rgba(255,122,26,.10);
   border-radius:10px;border-left:3px solid var(--orange);font-weight:600;animation:slideLeft .3s ease both}
 
-/* ═══ BUTTONS ═══ */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 16px;
   border-radius:9px;border:1px solid var(--border-2);background:rgba(255,122,26,.06);
   font-weight:700;font-size:13px;cursor:pointer;transition:all .2s;white-space:nowrap;color:var(--text-2)}
 .btn:hover{border-color:var(--border-3);background:rgba(255,122,26,.14);transform:translateY(-1px);color:#fff}
 .btn svg{width:14px;height:14px;flex:0 0 auto}
 .btn.primary{background:linear-gradient(135deg,var(--orange-2),var(--orange) 60%,var(--orange-3));
-  border-color:rgba(255,140,50,.55);color:#1a0e05;font-weight:800;box-shadow:0 6px 20px -6px var(--orange-glow);width:100%;padding:14px 16px;font-size:14px}
+  border-color:rgba(255,140,50,.55);color:#1a0e05;font-weight:800;
+  box-shadow:0 6px 20px -6px var(--orange-glow);width:100%;padding:14px 16px;font-size:14px}
 .btn.primary:hover{filter:brightness(1.08)}
 .btn.ghost{background:transparent;border-color:var(--border);color:var(--mute)}
 .btn.ghost:hover{background:rgba(255,122,26,.08);border-color:var(--border-2);color:#fff}
@@ -103,11 +87,8 @@ input,select,textarea{font-weight:600}
 .btn.danger:hover{background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.5);color:#fca5a5}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
 
-/* ═══ APP LAYOUT ═══ */
 #app{display:grid;grid-template-columns:240px 1fr;min-height:100vh;position:relative;z-index:2}
 #app:not([hidden]){animation:fadeIn .5s}
-
-/* ═══ SIDEBAR ═══ */
 aside{background:var(--side);border-right:1px solid var(--border);
   padding:20px 14px;display:flex;flex-direction:column;gap:3px;
   position:sticky;top:0;height:100vh;z-index:30;overflow-y:auto}
@@ -121,9 +102,7 @@ aside{background:var(--side);border-right:1px solid var(--border);
 .brand .logo .fallback{font-size:20px;font-weight:900;color:var(--orange)}
 .brand .name b{color:#fff;display:block;font-weight:800;font-size:15px;letter-spacing:-.02em}
 .brand .name small{display:block;font-size:9.5px;font-weight:700;color:var(--orange-2);letter-spacing:1.2px;text-transform:uppercase;margin-top:1px}
-
-.nav-section{padding:12px 10px 6px;font-size:10px;font-weight:800;color:var(--dim);
-  letter-spacing:1.2px;text-transform:uppercase}
+.nav-section{padding:12px 10px 6px;font-size:10px;font-weight:800;color:var(--dim);letter-spacing:1.2px;text-transform:uppercase}
 .nav{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:8px;color:var(--mute);
   font-weight:600;font-size:13px;cursor:pointer;background:none;border:0;text-align:left;width:100%;
   transition:all .18s;position:relative}
@@ -138,7 +117,6 @@ aside{background:var(--side);border-right:1px solid var(--border);
 .nav.on small{color:#0a0505;background:var(--orange)}
 .side-bottom{margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
 
-/* ═══ MAIN ═══ */
 main{padding:24px 28px 60px;min-width:0;overflow-x:hidden}
 .header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
   margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)}
@@ -152,7 +130,6 @@ main{padding:24px 28px 60px;min-width:0;overflow-x:hidden}
 .user-info .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulse 2s infinite}
 .user-info b{color:#fff;font-weight:700}
 
-/* ═══ STATS GRID ═══ */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
 .stat{position:relative;overflow:hidden;background:var(--panel);border:1px solid var(--border);
   border-radius:12px;padding:18px 20px;transition:all .25s}
@@ -170,7 +147,6 @@ main{padding:24px 28px 60px;min-width:0;overflow-x:hidden}
 .stat[data-tone="bad"]{--accent:var(--bad);--accent-bg:rgba(239,68,68,.10)}
 .stat[data-tone="total"]{--accent:var(--orange-2);--accent-bg:rgba(255,122,26,.10)}
 
-/* ═══ CARD / TABLE ═══ */
 .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden}
 .card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
   padding:16px 20px;border-bottom:1px solid var(--border);background:var(--panel-2)}
@@ -195,7 +171,6 @@ tbody tr{transition:background .15s}
 tbody tr:hover{background:rgba(255,122,26,.04)}
 tbody tr:last-child td{border-bottom:0}
 
-/* ═══ KEY / HWID ═══ */
 .key,.hw{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.02em}
 .key{color:var(--orange-2);cursor:pointer;padding:4px 9px;border-radius:6px;
   background:rgba(255,122,26,.08);border:1px solid var(--border-2);
@@ -205,7 +180,6 @@ tbody tr:last-child td{border-bottom:0}
 .hw{color:var(--text-2)}
 .mut{color:var(--mute);font-size:12px}
 
-/* ═══ BADGES ═══ */
 .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;
   font-size:11px;font-weight:800;border:1px solid transparent;letter-spacing:.02em}
 .badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor}
@@ -215,23 +189,16 @@ tbody tr:last-child td{border-bottom:0}
 .badge.unused{color:var(--blue);background:rgba(96,165,250,.10);border-color:rgba(96,165,250,.22)}
 .badge.active::before{animation:pulse 2s infinite}
 
-/* ═══ VIEWS ═══ */
 .view{display:none}
 .view.on{display:block;animation:riseIn .4s}
 .empty{padding:60px 24px;text-align:center;color:var(--dim);font-size:13px;
   display:flex;flex-direction:column;align-items:center;gap:12px}
-.empty::before{content:"";width:48px;height:48px;border-radius:12px;
-  background:rgba(255,122,26,.08);border:1px solid var(--border-2);
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff7a1a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.35-4.35'/></svg>");
-  background-repeat:no-repeat;background-position:center;background-size:22px}
 .sk{height:12px;border-radius:6px;background:linear-gradient(90deg,rgba(255,122,26,.05),rgba(255,122,26,.15),rgba(255,122,26,.05));
   background-size:200% 100%;animation:shimmer 1.4s linear infinite;width:80%}
 tr.skeleton td{padding:16px}
 
-/* ═══ ACTIONS BTNS ═══ */
 .row{display:flex;gap:6px}
 
-/* ═══ MODAL ═══ */
 .modal{position:fixed;inset:0;background:rgba(6,3,0,.80);display:grid;place-items:center;padding:20px;
   z-index:200;animation:fadeIn .2s;backdrop-filter:blur(10px)}
 .box{background:linear-gradient(180deg,rgba(30,16,10,.99),rgba(20,10,5,.99));
@@ -261,7 +228,6 @@ tr.skeleton td{padding:16px}
   padding:14px;font-family:var(--mono);font-size:12px;color:var(--orange-2);font-weight:600;
   max-height:220px;overflow:auto;white-space:pre;margin-bottom:14px;line-height:1.8}
 
-/* ═══ TOASTS ═══ */
 #toasts{position:fixed;right:20px;bottom:20px;display:flex;flex-direction:column;gap:10px;z-index:300;pointer-events:none}
 .toast{display:flex;align-items:center;gap:11px;
   background:linear-gradient(180deg,rgba(30,16,10,.98),rgba(20,10,5,.98));
@@ -274,7 +240,6 @@ tr.skeleton td{padding:16px}
 .toast.error{border-left-color:var(--bad)}
 .toast.error svg{color:#f87171}
 
-/* ═══ RESPONSIVE ═══ */
 @media(max-width:960px){
   #app{grid-template-columns:1fr}
   aside{position:sticky;top:0;height:auto;width:100%;flex-direction:row;align-items:center;gap:6px;
@@ -321,7 +286,6 @@ tr.skeleton td{padding:16px}
 </head>
 <body>
 
-<!-- ═══ LOGIN ═══ -->
 <div id="login">
   <form class="lbox" id="loginForm" autocomplete="off">
     <div class="logo-wrap">
@@ -339,7 +303,6 @@ tr.skeleton td{padding:16px}
   </form>
 </div>
 
-<!-- ═══ APP ═══ -->
 <div id="app" hidden>
   <aside>
     <div class="brand">
@@ -386,7 +349,7 @@ tr.skeleton td{padding:16px}
     <div class="header">
       <div class="header-left">
         <h1 id="pageTitle">Dashboard</h1>
-        <p id="pageSubtitle">Vue d'ensemble de ton système de licences</p>
+        <p id="pageSubtitle">Vue d'ensemble de ton système</p>
       </div>
       <div class="header-right">
         <div class="user-info">
@@ -405,19 +368,10 @@ tr.skeleton td{padding:16px}
       </div>
     </div>
 
-    <!-- DASHBOARD -->
     <section class="view on" id="v-dashboard">
       <div class="stats" id="stats"></div>
       <div class="card">
-        <div class="card-head">
-          <h2>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Activité récente
-          </h2>
-        </div>
-        <div class="toolbar" style="border-top:0;border-bottom:1px solid var(--border)">
-          <input id="qDash" type="search" placeholder="Rechercher une clé, HWID…">
-        </div>
+        <div class="card-head"><h2>Activité récente</h2></div>
         <table>
           <thead><tr><th>Clé</th><th>Statut</th><th>Durée</th><th>HWID</th><th>Expire</th></tr></thead>
           <tbody id="dashBody"></tbody>
@@ -426,15 +380,11 @@ tr.skeleton td{padding:16px}
       </div>
     </section>
 
-    <!-- LICENCES -->
     <section class="view" id="v-keys">
       <div class="stats" id="statsKeys"></div>
       <div class="card">
         <div class="card-head">
-          <h2>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            Toutes les licences
-          </h2>
+          <h2>🔑 Toutes les licences</h2>
         </div>
         <div class="toolbar">
           <input id="q" type="search" placeholder="Rechercher par clé ou HWID…">
@@ -454,15 +404,9 @@ tr.skeleton td{padding:16px}
       </div>
     </section>
 
-    <!-- HWID BLACKLIST -->
     <section class="view" id="v-hwid">
       <div class="card">
-        <div class="card-head">
-          <h2>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-            HWID blacklistés
-          </h2>
-        </div>
+        <div class="card-head"><h2>🚫 HWID blacklistés</h2></div>
         <div class="toolbar">
           <input id="newHwid" type="text" placeholder="HWID à blacklister">
           <button class="btn primary" id="banHwid" style="width:auto">
@@ -478,32 +422,20 @@ tr.skeleton td{padding:16px}
       </div>
     </section>
 
-    <!-- LOGS -->
     <section class="view" id="v-logs">
       <div class="card">
-        <div class="card-head">
-          <h2>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            Journal d'activité
-          </h2>
-        </div>
+        <div class="card-head"><h2>📋 Journal d'activité</h2></div>
         <table>
           <thead><tr><th>Date</th><th>Type</th><th>Détail</th></tr></thead>
           <tbody id="logsBody"></tbody>
         </table>
-        <div class="empty" id="logsEmpty">Aucun log.</div>
+        <div class="empty" id="logsEmpty">Aucun log disponible.</div>
       </div>
     </section>
 
-    <!-- SETTINGS -->
     <section class="view" id="v-settings">
       <div class="card">
-        <div class="card-head">
-          <h2>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>
-            Informations du système
-          </h2>
-        </div>
+        <div class="card-head"><h2>⚙️ Informations du système</h2></div>
         <div style="padding:20px">
           <div class="fld">
             <label>URL de l'API</label>
@@ -528,9 +460,6 @@ tr.skeleton td{padding:16px}
 <script>
 "use strict";
 
-// ═══════════════════════════════════════════════════════
-// CONFIG
-// ═══════════════════════════════════════════════════════
 const API_URL = "https://raxo-api.raxoshopp.workers.dev";
 let adminKey = '';
 
@@ -555,6 +484,9 @@ function toast(msg, type){
   setTimeout(() => el.remove(), 2800);
 }
 
+// ═══════════════════════════════════════════════════════
+// IMPORTANT : appel API avec le BON format ?action=xxx
+// ═══════════════════════════════════════════════════════
 async function callAPI(action, params = {}){
   const qs = new URLSearchParams({ action, admin: adminKey, ...params });
   const r = await fetch(`${API_URL}/?${qs}`);
@@ -595,9 +527,8 @@ $('logout').onclick = () => {
   location.reload();
 };
 
-// NAV
 const titles = {
-  dashboard: ['Dashboard', 'Vue d\'ensemble de ton système de licences'],
+  dashboard: ['Dashboard', 'Vue d\'ensemble de ton système'],
   keys: ['Licences', 'Gère toutes tes clés Akeiro'],
   hwid: ['Blacklist HWID', 'Liste noire des identifiants matériels'],
   logs: ['Logs', 'Historique des événements du panel'],
@@ -614,7 +545,6 @@ document.querySelectorAll('.nav').forEach(b => b.onclick = () => {
   if (b.dataset.view === 'logs') loadLogs();
 });
 
-// STATS
 function renderStatsTo(targetId, keys){
   const c = { active: 0, expired: 0, banned: 0, unused: 0 };
   keys.forEach(k => c[statusOf(k)]++);
@@ -631,7 +561,6 @@ function renderStatsTo(targetId, keys){
   ).join('');
 }
 
-// KEYS
 let allKeys = [];
 
 async function loadKeys(){
@@ -684,8 +613,7 @@ function renderRows(){
 }
 
 function renderDash(){
-  const q = ($('qDash').value || '').trim().toUpperCase();
-  const rows = (q ? allKeys.filter(k => k.key.toUpperCase().includes(q) || (k.hwid || '').toUpperCase().includes(q)) : allKeys).slice(0, 10);
+  const rows = allKeys.slice(0, 10);
   $('dashEmpty').hidden = rows.length > 0;
   $('dashEmpty').textContent = 'Aucune clé. Crée-en une.';
   const frag = document.createDocumentFragment();
@@ -705,8 +633,8 @@ function renderDash(){
 
 $('q').oninput = renderRows;
 $('filterStatus').onchange = renderRows;
-$('qDash').oninput = renderDash;
 
+// CLICK HANDLER
 document.addEventListener('click', async e => {
   const cp = e.target.closest('[data-copy]');
   if (cp){
@@ -717,10 +645,13 @@ document.addEventListener('click', async e => {
   const b = e.target.closest('[data-act]');
   if (!b) return;
   const key = b.dataset.key, a = b.dataset.act;
+
   if (a === 'del' && !confirm('Supprimer définitivement cette clé ?')) return;
   if (a === 'ban' && !confirm('Bannir cette clé ?')) return;
+
   b.disabled = true;
   try {
+    // ═══ IMPORTANT : on utilise callAPI avec ?action=delete / ban / unban ═══
     const r = await callAPI(a, { key });
     if (r.ok){
       toast({ ban: 'Clé bannie', unban: 'Clé réactivée', del: 'Clé supprimée' }[a], 'success');
@@ -732,11 +663,8 @@ document.addEventListener('click', async e => {
   } catch { toast('Erreur réseau', 'error'); b.disabled = false; }
 });
 
-// NEW KEY MODAL
+// NEW KEY
 $('newKey').onclick = () => openNewKeyModal(30);
-document.querySelectorAll('[data-quick]').forEach(btn => {
-  btn.onclick = () => openNewKeyModal(parseInt(btn.dataset.quick, 10));
-});
 
 function openNewKeyModal(days){
   const m = document.createElement('div');
@@ -863,35 +791,26 @@ document.addEventListener('click', async e => {
 });
 
 // LOGS
-const L = {
-  create: ['Création', 'active'], ban: ['Ban', 'banned'], unban: ['Déban', 'active'],
-  delete: ['Suppression', 'expired'], 'hwid-ban': ['HWID banni', 'banned'],
-  'hwid-unban': ['HWID retiré', 'active'], 'auth-ok': ['Connexion', 'active'],
-  'auth-banned': ['Clé bannie', 'banned'], 'auth-expired': ['Clé expirée', 'expired'],
-  'auth-hwid-banned': ['HWID banni', 'banned'], 'auth-hwid-mismatch': ['HWID diff.', 'expired']
-};
-
 async function loadLogs(){
   try {
     const r = await callAPI('list-logs');
     if (!r.ok && r.error !== 'UNKNOWN_ACTION') throw new Error();
     const list = r.logs || [];
     $('logsEmpty').hidden = list.length > 0;
-    $('logsEmpty').textContent = 'Aucun log.';
+    $('logsEmpty').textContent = 'Aucun log disponible.';
     const frag = document.createDocumentFragment();
     list.forEach(l => {
-      const [lab, cls] = L[l.type] || [l.type || '—', 'active'];
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td data-l="Date" class="mut">${fmtDate(l.ts)}</td>
-        <td data-l="Type"><span class="badge ${cls}">${esc(lab)}</span></td>
+        <td data-l="Type"><span class="badge active">${esc(l.type || '—')}</span></td>
         <td data-l="Détail">${esc(l.detail || '')}</td>`;
       frag.appendChild(tr);
     });
     $('logsBody').replaceChildren(frag);
   } catch {
     $('logsEmpty').hidden = false;
-    $('logsEmpty').textContent = 'Impossible de charger les logs.';
+    $('logsEmpty').textContent = 'Aucun log disponible.';
   }
 }
 
@@ -908,7 +827,6 @@ function start(){
   loadLogs();
 }
 
-// AUTO LOGIN
 const savedKey = sessionStorage.getItem('raxo_admin_key');
 if (savedKey){
   adminKey = savedKey;
