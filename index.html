@@ -196,6 +196,17 @@ tr.skeleton td{padding:16px}
 
 .row{display:flex;gap:6px}
 
+/* Expand user details */
+.user-detail{background:rgba(255,122,26,.03);border-top:1px solid var(--border);padding:16px 20px;animation:riseIn .3s}
+.user-detail h4{font-size:11px;color:var(--orange-2);text-transform:uppercase;letter-spacing:1.2px;font-weight:800;margin-bottom:10px}
+.ip-list{display:flex;flex-direction:column;gap:6px}
+.ip-item{display:flex;align-items:center;gap:12px;padding:8px 12px;background:rgba(0,0,0,.35);
+  border:1px solid var(--border);border-radius:8px;font-size:12px}
+.ip-item .flag{font-size:16px;flex:0 0 auto}
+.ip-item .ip-addr{font-family:var(--mono);color:var(--orange-2);font-weight:700;flex:1}
+.ip-item .ip-info{color:var(--mute);font-size:11px;font-weight:600}
+.ip-item .ip-count{background:rgba(255,122,26,.14);color:var(--orange-2);padding:2px 8px;border-radius:6px;font-size:11px;font-weight:800}
+
 .modal{position:fixed;inset:0;background:rgba(6,3,0,.80);display:grid;place-items:center;padding:20px;
   z-index:200;animation:fadeIn .2s;backdrop-filter:blur(10px)}
 .box{background:linear-gradient(180deg,rgba(30,16,10,.99),rgba(20,10,5,.99));
@@ -320,6 +331,10 @@ tr.skeleton td{padding:16px}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       Licences <small id="nKeys">0</small>
     </button>
+    <button class="nav" data-view="users">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Utilisateurs <small id="nUsers">0</small>
+    </button>
     <button class="nav" data-view="hwid">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
       Blacklist HWID <small id="nHwid">0</small>
@@ -365,12 +380,12 @@ tr.skeleton td{padding:16px}
     <section class="view on" id="v-dashboard">
       <div class="stats" id="stats"></div>
       <div class="card">
-        <div class="card-head"><h2>Activité récente</h2></div>
+        <div class="card-head"><h2>👥 Dernières connexions</h2></div>
         <table>
-          <thead><tr><th>Clé</th><th>Statut</th><th>Durée</th><th>HWID</th><th>Expire</th></tr></thead>
+          <thead><tr><th>Licence</th><th>HWID</th><th>IP</th><th>Dernière connexion</th><th>Connexions</th></tr></thead>
           <tbody id="dashBody"></tbody>
         </table>
-        <div class="empty" id="dashEmpty">Chargement…</div>
+        <div class="empty" id="dashEmpty">Aucune connexion enregistrée.</div>
       </div>
     </section>
 
@@ -393,6 +408,25 @@ tr.skeleton td{padding:16px}
           <tbody id="keysBody"></tbody>
         </table>
         <div class="empty" id="keysEmpty">Chargement…</div>
+      </div>
+    </section>
+
+    <section class="view" id="v-users">
+      <div class="card">
+        <div class="card-head">
+          <h2>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Utilisateurs ayant utilisé une clé
+          </h2>
+        </div>
+        <div class="toolbar">
+          <input id="qUsers" type="search" placeholder="Rechercher par licence, HWID ou IP…">
+        </div>
+        <table>
+          <thead><tr><th>Licence</th><th>HWID</th><th>Dernière IP</th><th>Dernière connexion</th><th>Total connexions</th><th></th></tr></thead>
+          <tbody id="usersBody"></tbody>
+        </table>
+        <div class="empty" id="usersEmpty">Aucun utilisateur n'a encore utilisé de clé.</div>
       </div>
     </section>
 
@@ -427,8 +461,8 @@ tr.skeleton td{padding:16px}
             <input type="text" value="Akeiro-xxxx-xxxx-xxxx-xxxx-xxxx" readonly style="font-family:var(--mono);font-size:12px">
           </div>
           <div class="fld">
-            <label>Clé admin</label>
-            <input type="text" value="raxo2024" readonly style="font-family:var(--mono);font-size:12px">
+            <label>Version</label>
+            <input type="text" value="1.1.0 — Tracking activé" readonly style="font-family:var(--mono);font-size:12px">
           </div>
         </div>
       </div>
@@ -441,9 +475,6 @@ tr.skeleton td{padding:16px}
 <script>
 "use strict";
 
-// ═══════════════════════════════════════════════════════
-// CONFIG — Ton URL API
-// ═══════════════════════════════════════════════════════
 const API_URL = "https://raxo-api.raxoshopp.workers.dev";
 let adminKey = '';
 
@@ -458,6 +489,14 @@ const fmtLeft = ms => {
 const statusOf = k => k.banned ? 'banned' : !k.hwid ? 'unused' : Date.now() > k.expiresAt ? 'expired' : 'active';
 const statusNames = { active: 'Active', expired: 'Expirée', banned: 'Bannie', unused: 'Non utilisée' };
 
+const countryFlags = {
+  FR:'🇫🇷',US:'🇺🇸',GB:'🇬🇧',DE:'🇩🇪',ES:'🇪🇸',IT:'🇮🇹',CA:'🇨🇦',BE:'🇧🇪',CH:'🇨🇭',
+  NL:'🇳🇱',PT:'🇵🇹',JP:'🇯🇵',CN:'🇨🇳',KR:'🇰🇷',RU:'🇷🇺',BR:'🇧🇷',MX:'🇲🇽',AU:'🇦🇺',
+  IN:'🇮🇳',MA:'🇲🇦',DZ:'🇩🇿',TN:'🇹🇳',SN:'🇸🇳',CI:'🇨🇮',CM:'🇨🇲',ZA:'🇿🇦',
+  LU:'🇱🇺',SE:'🇸🇪',NO:'🇳🇴',DK:'🇩🇰',FI:'🇫🇮',IE:'🇮🇪',AT:'🇦🇹',PL:'🇵🇱',CZ:'🇨🇿',
+  TR:'🇹🇷',SA:'🇸🇦',AE:'🇦🇪',EG:'🇪🇬',IL:'🇮🇱',AR:'🇦🇷',CL:'🇨🇱',CO:'🇨🇴',PE:'🇵🇪',
+};
+
 function toast(msg, type){
   const el = document.createElement('div');
   el.className = 'toast ' + (type === 'success' ? 'success' : 'error');
@@ -468,7 +507,6 @@ function toast(msg, type){
   setTimeout(() => el.remove(), 2800);
 }
 
-// ═══ APPEL API ═══
 async function callAPI(action, params = {}){
   const qs = new URLSearchParams({ action, admin: adminKey, ...params });
   const r = await fetch(`${API_URL}/?${qs}`);
@@ -509,10 +547,11 @@ $('logout').onclick = () => {
   location.reload();
 };
 
-// ═══ NAVIGATION ═══
+// ═══ NAV ═══
 const titles = {
-  dashboard: ['Dashboard', 'Vue d\'ensemble de ton système'],
+  dashboard: ['Dashboard', 'Vue d\'ensemble et dernières connexions'],
   keys: ['Licences', 'Gère toutes tes clés Akeiro'],
+  users: ['Utilisateurs', 'Traçage HWID + IP des utilisateurs'],
   hwid: ['Blacklist HWID', 'Liste noire des identifiants matériels'],
   settings: ['Paramètres', 'Configuration du panel']
 };
@@ -524,6 +563,7 @@ document.querySelectorAll('.nav').forEach(b => b.onclick = () => {
   $('pageSubtitle').textContent = s;
   $('newKey').hidden = !['dashboard','keys'].includes(b.dataset.view);
   if (b.dataset.view === 'hwid') loadBlacklist();
+  if (b.dataset.view === 'users' || b.dataset.view === 'dashboard') loadUsers();
 });
 
 // ═══ STATS ═══
@@ -544,11 +584,11 @@ function renderStatsTo(targetId, keys){
 }
 
 let allKeys = [];
+let allUsers = [];
 
 async function loadKeys(){
   $('keysEmpty').hidden = true;
   $('keysBody').innerHTML = '<tr class="skeleton"><td colspan="7"><div class="sk"></div></td></tr>'.repeat(5);
-  $('dashBody').innerHTML = '<tr class="skeleton"><td colspan="5"><div class="sk"></div></td></tr>'.repeat(3);
   try {
     const r = await callAPI('list');
     if (!r.ok){ toast(r.error || 'Erreur', 'error'); return; }
@@ -556,7 +596,6 @@ async function loadKeys(){
     renderStatsTo('stats', allKeys);
     renderStatsTo('statsKeys', allKeys);
     renderRows();
-    renderDash();
     $('nKeys').textContent = allKeys.length;
   } catch {
     toast('Erreur de chargement', 'error');
@@ -595,19 +634,20 @@ function renderRows(){
 }
 
 function renderDash(){
-  const rows = allKeys.slice(0, 10);
+  const rows = allUsers.slice(0, 10);
   $('dashEmpty').hidden = rows.length > 0;
-  $('dashEmpty').textContent = 'Aucune clé. Crée-en une.';
+  $('dashEmpty').textContent = 'Aucune connexion enregistrée. Lance ton loader avec une clé pour voir apparaître les infos.';
   const frag = document.createDocumentFragment();
-  rows.forEach(k => {
-    const s = statusOf(k);
+  rows.forEach(u => {
+    const lastIP = u.ips && u.ips[0] ? u.ips[0] : null;
+    const flag = lastIP && u.country ? (countryFlags[u.country] || '🌍') : '🌍';
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td data-l="Clé"><span class="key" data-copy="${esc(k.key)}">${esc(k.key)}</span></td>
-      <td data-l="Statut"><span class="badge ${s}">${statusNames[s]}</span></td>
-      <td data-l="Durée" class="mut">${esc(k.days || '?')} j</td>
-      <td data-l="HWID">${k.hwid ? `<span class="hw">${esc(k.hwid)}</span>` : '<span class="mut"><i>—</i></span>'}</td>
-      <td data-l="Expire" class="mut">${fmtDate(k.expiresAt)}</td>`;
+      <td data-l="Licence"><span class="key" data-copy="${esc(u.license)}">${esc(u.license)}</span></td>
+      <td data-l="HWID"><span class="hw">${u.hwid ? esc(u.hwid) : '—'}</span></td>
+      <td data-l="IP">${lastIP ? `<span class="hw">${flag} ${esc(lastIP.ip)}</span>` : '<span class="mut">—</span>'}</td>
+      <td data-l="Dernière connexion" class="mut">${u.lastSeen ? fmtDate(u.lastSeen) : '—'}</td>
+      <td data-l="Connexions"><span class="badge active">${u.connections || 0}</span></td>`;
     frag.appendChild(tr);
   });
   $('dashBody').replaceChildren(frag);
@@ -616,27 +656,47 @@ function renderDash(){
 $('q').oninput = renderRows;
 $('filterStatus').onchange = renderRows;
 
-// ═══ CLIC ACTIONS ═══
+// ═══ ACTIONS ═══
 document.addEventListener('click', async e => {
   const cp = e.target.closest('[data-copy]');
   if (cp){
-    try { await navigator.clipboard.writeText(cp.dataset.copy); toast('Clé copiée', 'success'); }
+    try { await navigator.clipboard.writeText(cp.dataset.copy); toast('Copié', 'success'); }
     catch { toast('Copie impossible', 'error'); }
     return;
   }
+
+  const toggle = e.target.closest('[data-toggle-user]');
+  if (toggle){
+    const lic = toggle.dataset.toggleUser;
+    const detail = document.querySelector(`[data-detail="${CSS.escape(lic)}"]`);
+    if (detail) detail.hidden = !detail.hidden;
+    return;
+  }
+
+  const delUser = e.target.closest('[data-del-user]');
+  if (delUser){
+    const lic = delUser.dataset.delUser;
+    if (!confirm(`Supprimer l'historique de ${lic} ?`)) return;
+    try {
+      const r = await callAPI('delete-user', { license: lic });
+      if (r.ok){ toast('Historique supprimé', 'success'); await loadUsers(); }
+      else toast(r.error || 'Erreur', 'error');
+    } catch { toast('Erreur réseau', 'error'); }
+    return;
+  }
+
   const b = e.target.closest('[data-act]');
   if (!b) return;
   const key = b.dataset.key, a = b.dataset.act;
-
   if (a === 'delete' && !confirm('Supprimer définitivement cette clé ?')) return;
   if (a === 'ban' && !confirm('Bannir cette clé ?')) return;
-
   b.disabled = true;
   try {
     const r = await callAPI(a, { key });
     if (r.ok){
       toast({ ban: 'Clé bannie', unban: 'Clé réactivée', delete: 'Clé supprimée' }[a] || 'OK', 'success');
       await loadKeys();
+      await loadUsers();
     } else {
       toast(r.error || 'Erreur', 'error');
       b.disabled = false;
@@ -644,7 +704,7 @@ document.addEventListener('click', async e => {
   } catch { toast('Erreur réseau', 'error'); b.disabled = false; }
 });
 
-// ═══ NOUVELLE CLÉ ═══
+// ═══ NEW KEY ═══
 $('newKey').onclick = () => openNewKeyModal(30);
 
 function openNewKeyModal(days){
@@ -683,7 +743,7 @@ function openNewKeyModal(days){
       const r = await callAPI('create', { days: daysVal, quantity, hwid });
       if (!r.ok){ toast(r.error || 'Erreur', 'error'); m.querySelector('#c2').disabled = false; return; }
       close();
-      toast(r.created.length + ' clé(s) Akeiro créée(s)', 'success');
+      toast(r.created.length + ' clé(s) créée(s)', 'success');
       await loadKeys();
       const rm = document.createElement('div');
       rm.className = 'modal';
@@ -712,6 +772,85 @@ function openNewKeyModal(days){
     } catch { toast('Erreur réseau', 'error'); m.querySelector('#c2').disabled = false; }
   };
 }
+
+// ═══ USERS (tracking) ═══
+async function loadUsers(){
+  try {
+    const r = await callAPI('users');
+    if (!r.ok) throw new Error();
+    allUsers = r.users || [];
+    renderUsers();
+    renderDash();
+    $('nUsers').textContent = allUsers.length;
+  } catch {
+    $('usersEmpty').hidden = false;
+    $('usersEmpty').textContent = 'Impossible de charger les utilisateurs.';
+  }
+}
+
+function renderUsers(){
+  const q = ($('qUsers').value || '').trim().toUpperCase();
+  const rows = !q ? allUsers : allUsers.filter(u =>
+    u.license.toUpperCase().includes(q) ||
+    (u.hwid || '').toUpperCase().includes(q) ||
+    (u.ips || []).some(ip => ip.ip.includes(q))
+  );
+  $('usersEmpty').hidden = rows.length > 0;
+  $('usersEmpty').textContent = 'Aucun utilisateur n\'a encore utilisé de clé.';
+  const frag = document.createDocumentFragment();
+
+  rows.forEach(u => {
+    const lastIP = u.ips && u.ips[0] ? u.ips[0] : null;
+    const flag = lastIP && u.country ? (countryFlags[u.country] || '🌍') : '🌍';
+    const ipCount = (u.ips || []).length;
+
+    // Ligne principale
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td data-l="Licence"><span class="key" data-copy="${esc(u.license)}">${esc(u.license)}</span></td>
+      <td data-l="HWID"><span class="hw">${u.hwid ? esc(u.hwid) : '—'}</span></td>
+      <td data-l="Dernière IP">${lastIP ? `<span class="hw">${flag} ${esc(lastIP.ip)}</span>` : '<span class="mut">—</span>'}</td>
+      <td data-l="Dernière connexion" class="mut">${u.lastSeen ? fmtDate(u.lastSeen) : '—'}</td>
+      <td data-l="Connexions"><span class="badge active">${u.connections || 0}</span></td>
+      <td data-l=""><div class="row">
+        <button class="btn ghost sm" data-toggle-user="${esc(u.license)}">${ipCount > 1 ? 'Voir ' + ipCount + ' IPs' : 'Détails'}</button>
+        <button class="btn danger sm" data-del-user="${esc(u.license)}">Suppr.</button>
+      </div></td>`;
+    frag.appendChild(tr);
+
+    // Ligne de détails (cachée par défaut)
+    if (u.ips && u.ips.length > 0){
+      const detailRow = document.createElement('tr');
+      detailRow.setAttribute('data-detail', u.license);
+      detailRow.hidden = true;
+      detailRow.innerHTML = `
+        <td colspan="6" style="padding:0;border:0">
+          <div class="user-detail">
+            <h4>📡 Toutes les IPs utilisées (${u.ips.length})</h4>
+            <div class="ip-list">
+              ${u.ips.map(ip => `
+                <div class="ip-item">
+                  <span class="flag">${countryFlags[ip.country] || '🌍'}</span>
+                  <span class="ip-addr">${esc(ip.ip)}</span>
+                  <span class="ip-info">Vu : ${fmtDate(ip.lastUsed)}</span>
+                  <span class="ip-count">${ip.count} fois</span>
+                </div>
+              `).join('')}
+            </div>
+            <div style="margin-top:12px;font-size:12px;color:var(--mute)">
+              📅 Première connexion : <b style="color:var(--text-2)">${u.firstSeen ? fmtDate(u.firstSeen) : '—'}</b>
+              ${u.country ? ` · 🌍 Pays : <b style="color:var(--text-2)">${esc(u.country)}${u.city ? ' — ' + esc(u.city) : ''}</b>` : ''}
+            </div>
+          </div>
+        </td>`;
+      frag.appendChild(detailRow);
+    }
+  });
+
+  $('usersBody').replaceChildren(frag);
+}
+
+$('qUsers').oninput = renderUsers;
 
 // ═══ BLACKLIST ═══
 let allBlacklist = [];
@@ -773,12 +912,14 @@ document.addEventListener('click', async e => {
 
 $('refresh').onclick = () => {
   loadKeys();
+  loadUsers();
   loadBlacklist();
   toast('Actualisé', 'success');
 };
 
 function start(){
   loadKeys();
+  loadUsers();
   loadBlacklist();
 }
 
