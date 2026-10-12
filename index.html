@@ -5,13 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0a0505">
 <title>Raxo — Auth System</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a0505;--bg-2:#100808;--side:#0d0606;--side-2:#140a08;
-  --panel:#15100d;--panel-2:#1a120e;
+  --bg:#0a0505;--side:#0d0606;--panel:#15100d;--panel-2:#1a120e;
   --border:rgba(255,122,26,.10);--border-2:rgba(255,122,26,.18);--border-3:rgba(255,122,26,.30);
   --text:#fff8f2;--text-2:#e8d5c4;--mute:#a88a72;--dim:#5a4030;
   --orange:#ff7a1a;--orange-2:#ffa64d;--orange-3:#e56a0a;
@@ -300,6 +297,7 @@ tr.skeleton td{padding:16px}
       Se connecter
     </button>
     <div class="err" id="loginErr" hidden></div>
+    <p style="margin-top:16px;font-size:11px;color:var(--dim);text-align:center">Clé par défaut : <b style="color:var(--orange-2)">raxo2024</b></p>
   </form>
 </div>
 
@@ -328,10 +326,6 @@ tr.skeleton td{padding:16px}
     </button>
 
     <div class="nav-section">Système</div>
-    <button class="nav" data-view="logs">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      Logs
-    </button>
     <button class="nav" data-view="settings">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       Paramètres
@@ -383,9 +377,7 @@ tr.skeleton td{padding:16px}
     <section class="view" id="v-keys">
       <div class="stats" id="statsKeys"></div>
       <div class="card">
-        <div class="card-head">
-          <h2>🔑 Toutes les licences</h2>
-        </div>
+        <div class="card-head"><h2>🔑 Toutes les licences</h2></div>
         <div class="toolbar">
           <input id="q" type="search" placeholder="Rechercher par clé ou HWID…">
           <select id="filterStatus">
@@ -422,17 +414,6 @@ tr.skeleton td{padding:16px}
       </div>
     </section>
 
-    <section class="view" id="v-logs">
-      <div class="card">
-        <div class="card-head"><h2>📋 Journal d'activité</h2></div>
-        <table>
-          <thead><tr><th>Date</th><th>Type</th><th>Détail</th></tr></thead>
-          <tbody id="logsBody"></tbody>
-        </table>
-        <div class="empty" id="logsEmpty">Aucun log disponible.</div>
-      </div>
-    </section>
-
     <section class="view" id="v-settings">
       <div class="card">
         <div class="card-head"><h2>⚙️ Informations du système</h2></div>
@@ -446,8 +427,8 @@ tr.skeleton td{padding:16px}
             <input type="text" value="Akeiro-xxxx-xxxx-xxxx-xxxx-xxxx" readonly style="font-family:var(--mono);font-size:12px">
           </div>
           <div class="fld">
-            <label>Version du panel</label>
-            <input type="text" value="1.0.0" readonly style="font-family:var(--mono);font-size:12px">
+            <label>Clé admin</label>
+            <input type="text" value="raxo2024" readonly style="font-family:var(--mono);font-size:12px">
           </div>
         </div>
       </div>
@@ -460,6 +441,9 @@ tr.skeleton td{padding:16px}
 <script>
 "use strict";
 
+// ═══════════════════════════════════════════════════════
+// CONFIG — Ton URL API
+// ═══════════════════════════════════════════════════════
 const API_URL = "https://raxo-api.raxoshopp.workers.dev";
 let adminKey = '';
 
@@ -484,16 +468,14 @@ function toast(msg, type){
   setTimeout(() => el.remove(), 2800);
 }
 
-// ═══════════════════════════════════════════════════════
-// IMPORTANT : appel API avec le BON format ?action=xxx
-// ═══════════════════════════════════════════════════════
+// ═══ APPEL API ═══
 async function callAPI(action, params = {}){
   const qs = new URLSearchParams({ action, admin: adminKey, ...params });
   const r = await fetch(`${API_URL}/?${qs}`);
   return r.json();
 }
 
-// LOGIN
+// ═══ LOGIN ═══
 $('loginForm').addEventListener('submit', async e => {
   e.preventDefault();
   const v = $('adminKey').value.trim();
@@ -527,11 +509,11 @@ $('logout').onclick = () => {
   location.reload();
 };
 
+// ═══ NAVIGATION ═══
 const titles = {
   dashboard: ['Dashboard', 'Vue d\'ensemble de ton système'],
   keys: ['Licences', 'Gère toutes tes clés Akeiro'],
   hwid: ['Blacklist HWID', 'Liste noire des identifiants matériels'],
-  logs: ['Logs', 'Historique des événements du panel'],
   settings: ['Paramètres', 'Configuration du panel']
 };
 document.querySelectorAll('.nav').forEach(b => b.onclick = () => {
@@ -542,9 +524,9 @@ document.querySelectorAll('.nav').forEach(b => b.onclick = () => {
   $('pageSubtitle').textContent = s;
   $('newKey').hidden = !['dashboard','keys'].includes(b.dataset.view);
   if (b.dataset.view === 'hwid') loadBlacklist();
-  if (b.dataset.view === 'logs') loadLogs();
 });
 
+// ═══ STATS ═══
 function renderStatsTo(targetId, keys){
   const c = { active: 0, expired: 0, banned: 0, unused: 0 };
   keys.forEach(k => c[statusOf(k)]++);
@@ -605,7 +587,7 @@ function renderRows(){
       <td data-l="Restant" class="mut">${s === 'active' ? fmtLeft(k.expiresAt - Date.now()) : '—'}</td>
       <td data-l="Actions"><div class="row">
         <button class="btn ghost sm" data-act="${k.banned ? 'unban' : 'ban'}" data-key="${esc(k.key)}">${k.banned ? 'Débannir' : 'Bannir'}</button>
-        <button class="btn danger sm" data-act="del" data-key="${esc(k.key)}">Suppr.</button>
+        <button class="btn danger sm" data-act="delete" data-key="${esc(k.key)}">Suppr.</button>
       </div></td>`;
     frag.appendChild(tr);
   });
@@ -634,7 +616,7 @@ function renderDash(){
 $('q').oninput = renderRows;
 $('filterStatus').onchange = renderRows;
 
-// CLICK HANDLER
+// ═══ CLIC ACTIONS ═══
 document.addEventListener('click', async e => {
   const cp = e.target.closest('[data-copy]');
   if (cp){
@@ -646,15 +628,14 @@ document.addEventListener('click', async e => {
   if (!b) return;
   const key = b.dataset.key, a = b.dataset.act;
 
-  if (a === 'del' && !confirm('Supprimer définitivement cette clé ?')) return;
+  if (a === 'delete' && !confirm('Supprimer définitivement cette clé ?')) return;
   if (a === 'ban' && !confirm('Bannir cette clé ?')) return;
 
   b.disabled = true;
   try {
-    // ═══ IMPORTANT : on utilise callAPI avec ?action=delete / ban / unban ═══
     const r = await callAPI(a, { key });
     if (r.ok){
-      toast({ ban: 'Clé bannie', unban: 'Clé réactivée', del: 'Clé supprimée' }[a], 'success');
+      toast({ ban: 'Clé bannie', unban: 'Clé réactivée', delete: 'Clé supprimée' }[a] || 'OK', 'success');
       await loadKeys();
     } else {
       toast(r.error || 'Erreur', 'error');
@@ -663,7 +644,7 @@ document.addEventListener('click', async e => {
   } catch { toast('Erreur réseau', 'error'); b.disabled = false; }
 });
 
-// NEW KEY
+// ═══ NOUVELLE CLÉ ═══
 $('newKey').onclick = () => openNewKeyModal(30);
 
 function openNewKeyModal(days){
@@ -732,7 +713,7 @@ function openNewKeyModal(days){
   };
 }
 
-// BLACKLIST
+// ═══ BLACKLIST ═══
 let allBlacklist = [];
 
 async function loadBlacklist(){
@@ -790,41 +771,15 @@ document.addEventListener('click', async e => {
   } catch { toast('Erreur réseau', 'error'); b.disabled = false; }
 });
 
-// LOGS
-async function loadLogs(){
-  try {
-    const r = await callAPI('list-logs');
-    if (!r.ok && r.error !== 'UNKNOWN_ACTION') throw new Error();
-    const list = r.logs || [];
-    $('logsEmpty').hidden = list.length > 0;
-    $('logsEmpty').textContent = 'Aucun log disponible.';
-    const frag = document.createDocumentFragment();
-    list.forEach(l => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td data-l="Date" class="mut">${fmtDate(l.ts)}</td>
-        <td data-l="Type"><span class="badge active">${esc(l.type || '—')}</span></td>
-        <td data-l="Détail">${esc(l.detail || '')}</td>`;
-      frag.appendChild(tr);
-    });
-    $('logsBody').replaceChildren(frag);
-  } catch {
-    $('logsEmpty').hidden = false;
-    $('logsEmpty').textContent = 'Aucun log disponible.';
-  }
-}
-
 $('refresh').onclick = () => {
   loadKeys();
   loadBlacklist();
-  loadLogs();
   toast('Actualisé', 'success');
 };
 
 function start(){
   loadKeys();
   loadBlacklist();
-  loadLogs();
 }
 
 const savedKey = sessionStorage.getItem('raxo_admin_key');
